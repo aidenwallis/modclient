@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Modclient</title>
+  <link href="https://aidenwallis.co.uk/favicon.ico" rel="shortcut icon">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="login-overlay" class="overlay">
+    <div class="overlay-center">
+      <div class="panel panel-center">
+        <div class="panel-heading">
+          <h3 class="panel-title">Welcome to Modclient!</h3>
+        </div>
+        <div class="panel-body">
+          <p>Welcome to modclient! In order to get started please login with your Twitch account below.</p>
+          <button id="login-button"><i class="fa fa-twitch"></i><span>Login with Twitch</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="select-channel" class="overlay">
+    <div class="overlay-center">
+      <div class="panel panel-center">
+        <div class="panel-heading">
+          <h3 class="panel-title">Select a channel to join</h3>
+        </div>
+        <div class="panel-body">
+          <div id="channel-form-alert" class="alert alert-danger"><p class="alert-text"></p></div>
+          <p>Please specify a channel to join in the input below.</p>
+          <form id="channel-form">
+            <input type="text" placeholder="eg. aidenwallis" class="input" id="channel-input">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="app"></div>
+  <script src="./app/index.js"></script>
+</body>
+</html>

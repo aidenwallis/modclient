@@ -1,0 +1,34 @@
+@import 'variables';
+
+.alert {
+  color: #fff;
+  border-radius: 3px;
+  padding: 8px 13px;
+  display: none;
+  margin-bottom: 14px;
+}
+
+.alert-active {
+  display: block;
+  animation: fade .4s ease;
+}
+
+.alert-danger {
+  background: $danger;
+}
+
+.alert-text {
+  color: #fff;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

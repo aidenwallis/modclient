@@ -1,0 +1,15 @@
+.input {
+  -webkit-appearance: none;
+  border-radius: 3px;
+  background: lighten($dark, 3);
+  box-shadow: none;
+  outline: none;
+  border: 1px solid $darker;
+  padding: 7px 13px;
+  font-family: inherit;
+  font-style: inherit;
+  color: #fff;
+  &:focus {
+    border-color: $blue;
+  }
+}

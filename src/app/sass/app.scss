@@ -1,0 +1,44 @@
+@import 'variables';
+
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: $dark;
+  font-family: 'Arial', sans-serif;
+}
+
+p {
+  font-size: 14px;
+  margin-top: 0;
+  margin-bottom: .7em;
+}
+
+#login-button {
+  background: $twitch;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 3px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  .fa {
+    margin-right: 7px;
+  }
+  span {
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+@import 'overlays';
+@import 'panels';
+@import 'form';
+@import 'alert';
+@import 'loader';
+@import 'chat';

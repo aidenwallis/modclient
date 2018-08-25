@@ -1,0 +1,32 @@
+@import 'variables';
+
+.panel {
+  border: 1px solid $darker;
+  max-width: 560px;
+  width: 100%;
+  display: block;
+}
+
+.panel-center {
+  margin: auto;
+}
+
+.panel-heading {
+  border-bottom: 1px solid $darker;
+  background: $darkless;
+  padding: 10px 14px;
+}
+
+.panel-title {
+  margin: 0;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.panel-body {
+  border-top: 1px solid rgba(#fff, .1);
+  color: #fff;
+  background: darken($dark, 1);
+  padding: 16px 14px;
+}

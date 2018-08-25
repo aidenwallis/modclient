@@ -1,0 +1,23 @@
+@import 'variables';
+
+.overlay {
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background: $dark;
+  display: none;
+  align-items: center;
+}
+
+.overlay-active {
+  display: flex;
+}
+
+.overlay-center {
+  margin: auto;
+  display: block;
+  width: 100%;
+}

@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.html",
+    "deploy": "sudo git pull && parcel build src/index.html"
   },
   "dependencies": {
     "axios": "^0.18.0",

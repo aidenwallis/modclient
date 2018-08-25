@@ -7,10 +7,13 @@ class ChatMessages extends ElementNode {
   constructor(node) {
     super(node);
     this.collectedMessages = [];
-    this.paused = false;
+    this.currentMessages = [];
+    this.hoverPause = false;
+    this.scrollPause = false;
     this.node.onmouseover = () => this.hoverOver();
     this.node.onmouseout = () => this.hoverOut();
     this.node.onscroll = e => this.scroll(e);
+    this.recentTimeouts = {};
     setInterval(() => this.updateMessages(), 200);
   }
 
@@ -23,7 +26,14 @@ class ChatMessages extends ElementNode {
     line.className = 'chat-line';
     line.innerHTML = parsedMessage;
     line.dataset.userId = message.tags['user-id'];
-    this.collectedMessages.push(line);
+    if (this.recentTimeouts[message.tags['user-id']]) {
+      delete this.recentTimeouts[message.tags['user-id']];
+    }
+    this.collectedMessages.push({
+      type: 'message',
+      data: message,
+      node: line,
+    });
   }
 
   parseMessage(message) {
@@ -38,11 +48,13 @@ class ChatMessages extends ElementNode {
   }
 
   updateMessages() {
-    if (this.paused) {
+    if (this.hoverPause || this.scrollPause) {
       return;
     }
     for (let i = 0; i < this.collectedMessages.length; i++) {
-      this.node.appendChild(this.collectedMessages[i]);
+      let message = this.collectedMessages[i];
+      this.node.appendChild(message.node);
+      this.currentMessages.push(message)
       if (i === this.collectedMessages.length - 1) {
         this.collectedMessages = [];
         const childLength = this.node.children.length;
@@ -50,6 +62,7 @@ class ChatMessages extends ElementNode {
           const toRemove = childLength - 300;
           for (let j = 0; j < toRemove; j++) {
             this.node.removeChild(this.node.childNodes[0]);
+            this.currentMessages.shift();
           }
         }
       }
@@ -59,31 +72,23 @@ class ChatMessages extends ElementNode {
 
   hoverOver() {
     if (SettingsModule.settings.chat.pause.mode === 1) {
-      this.pauseChat('chat hover');
+      this.hoverPause = true;
     }
   }
 
   hoverOut() {
     if (SettingsModule.settings.chat.pause.mode === 1) {
-      this.unpauseChat();
+      this.hoverPause = false;
     }
-  }
-
-  pauseChat(reason = 'hover') {
-    this.paused = true;
   }
 
   scroll(e) {
     const scrolledBottom = e.target.scrollTop === (e.target.scrollHeight - e.target.offsetHeight);
     if (!scrolledBottom) {
-      this.pauseChat();
-    } else {
-      this.unpauseChat();
+      this.scrollPause = true;
+    } else if (this.scrollPause) {
+      this.scrollPause = false;
     }
-  }
-
-  unpauseChat() {
-    this.paused = false;
   }
 }
 

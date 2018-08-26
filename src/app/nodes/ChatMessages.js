@@ -133,17 +133,19 @@ class ChatMessages extends ElementNode {
   }
 
   scroll(e) {
-    const scrolledBottom = e.target.scrollTop === (e.target.scrollHeight - e.target.offsetHeight);
-    if (!scrolledBottom) {
-      this.scrollPause = true;
-      if (this.hoverPause) {
-        this.removeStatusNode();
-        this.spawnChatStatus();
+    window.requestAnimationFrame(() => {
+      const scrolledBottom = e.target.scrollTop === (e.target.scrollHeight - e.target.offsetHeight);
+      if (!scrolledBottom) {
+        this.scrollPause = true;
+        if (this.hoverPause) {
+          this.removeStatusNode();
+          this.spawnChatStatus();
+        }
+      } else if (this.scrollPause) {
+        this.scrollPause = false;
       }
-    } else if (this.scrollPause) {
-      this.scrollPause = false;
-    }
-    this.checkStatusNode();
+      this.checkStatusNode();
+    });
   }
 
   receiveClearchat(message) {

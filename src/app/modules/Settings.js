@@ -1,3 +1,5 @@
+import assign from 'lodash/assign';
+
 const defaultSettings = {
   chat: {
     pause: {
@@ -8,7 +10,17 @@ const defaultSettings = {
     css: null,
     chatLines: false,
   },
-  modLineIcons: [],
+  modLineIcons: [{
+    type: 0,
+    labelType: 0,
+    iconLabel: 'ban',
+    query: '.ban {username}',
+  } ,{
+    type: 0,
+    labelType: 0,
+    iconLabel: 'clock-o',
+    query: '.timeout {username} 600',
+  }],
 };
 
 class SettingsModule {

@@ -29,6 +29,9 @@ class PubsubConnection extends EventEmitter {
           this.send('LISTEN', topics);
         }
         console.log('Connected to Pubsub!');
+        setInterval(() => {
+          this.send('PONG', null);
+        }, 30 * 1000);
         resolve();
       };
       this.client.onmessage = (e) => {

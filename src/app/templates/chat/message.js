@@ -1,9 +1,23 @@
 import escape from 'lodash/escape';
-import regexes from '../../regexes';
+import sdbmCode from '../../util/sdbmCode';
 import badgeTemplate from './badge';
 import BadgesModule from '../../modules/Badges';
+import BTTVModule from '../../modules/BTTV';
+import FFZModule from '../../modules/FFZ';
 
+const defaultColors = ['#e391b8', '#e091ce', '#da91de', '#c291db', '#ab91d9', '#9691d6', '#91a0d4', '#91b2d1', '#91c2cf', '#91ccc7', '#91c9b4', '#90c7a2', '#90c492', '#9dc290', '#aabf8f', '#b5bd8f', '#bab58f', '#b8a68e', '#b5998e', '#b38d8d'];
 const intlNameTemplate = (name) => `<span class="chat-line-name-intl-login"> (${name})</span>`;
+
+function renderWord(message, word) {
+  const emote = BTTVModule.findEmote(word) || FFZModule.findEmote(word) || null;
+  if (emote) {
+    return `<img src="${emote.url}" class="chat-line-emote chat-line-emote-${emote.id} chat-line-${emote.provider}-emote" data-provider="${emote.provider}" title="${word}">`;
+  }
+  if (word[0] === '@') {
+    return `<strong>${word}</strong>`;
+  }
+  return word;
+}
 
 // this emote formatting i found by alca, props to him!
 function renderText(message, emotes) {
@@ -16,7 +30,24 @@ function renderText(message, emotes) {
       characterArray[k] = '';
     }
   }
-  return characterArray.join('');
+  let word = '';
+  let final = '';
+  for (let i = 0; i < characterArray.length; i++) {
+    if (characterArray[i] === undefined) {
+      continue;
+    } else if (characterArray[i] === ' ') {
+      final += `${renderWord(message, word)} `;
+      word = '';
+    } else if (characterArray[i].length > 5) {
+      final += `${renderWord(message, word)}`;
+      final += characterArray[i];
+      word = '';
+    } else {
+      word += characterArray[i];
+    }
+  }
+  final += renderWord(message, word);
+  return final;
 }
 
 function messageTemplate(message) {
@@ -26,13 +57,20 @@ function messageTemplate(message) {
       return { name: split[0], version: split[1] };
     })
     .map((b) => {
-      if (BadgesModule.channelBadges[b.name]) {
-        return BadgesModule.channelBadges[b.name].versions[b.version];
-      }
+      let badge = null;
       if (BadgesModule.globalBadges[b.name]) {
-        return BadgesModule.globalBadges[b.name].versions[b.version];
+        badge = BadgesModule.globalBadges[b.name].versions[b.version];
       }
-      return null;
+      if (BadgesModule.channelBadges[b.name]) {
+        badge = BadgesModule.channelBadges[b.name].versions[b.version];
+      }
+      if (BadgesModule.overridenBadges[b.name] && badge) {
+        badge.image_url_1x = BadgesModule.overridenBadges[b.name];
+      }
+      if (badge) {
+        badge.name = b.name;
+      }
+      return badge;
     })
     .filter(b => b)
     .map((badge) => badgeTemplate(badge))
@@ -53,14 +91,17 @@ function messageTemplate(message) {
       }
     }
   }
-
   const escapedUsername = escape(message.prefix.split('!')[0]);
+  let color = message.tags.color;
+  if (!color || color === '') {
+    color = defaultColors[sdbmCode(message.tags['user-id'] || escapedUsername) % (defaultColors.length)];
+  }
   const escapedDisplayName = escape(message.tags['display-name']);
   const intlName = escapedDisplayName.toLowerCase() !== escapedUsername;
   return `
     <span class="chat-line-badges">${badges}</span>
     <span class="chat-line-name">
-      <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${message.tags.color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span><span class="chat-line-colon">:</span>
+      <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span><span class="chat-line-colon">:</span>
     </span>
     <span class="chat-line-text">${renderText(escape(message.trailing), emotes)}</span>
   `;

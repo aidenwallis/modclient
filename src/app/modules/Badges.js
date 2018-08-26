@@ -4,6 +4,7 @@ class BadgesModule {
   constructor() {
     this.globalBadges = {};
     this.channelBadges = {};
+    this.overridenBadges = {};
   }
 
   fetchGlobalBadges() {
@@ -18,6 +19,10 @@ class BadgesModule {
       this.channelBadges = badges;
       return true;
     });
+  }
+
+  overrideModeratorBadge(url) {
+    this.overridenBadges.moderator = url;
   }
 
   _badgeRequest(resource) {

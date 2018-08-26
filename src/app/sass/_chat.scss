@@ -32,13 +32,20 @@
 
 #chat-messages {
   flex: 1;
-  max-height: calc(100vh - 211px);
+  max-height: calc(100vh - 199px);
   overflow-x: hidden;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(#fff, .3);
+  }
 }
 
 .chat-footer {
   padding: 20px 30px;
+  position: relative;
 }
 
 .chat-input {
@@ -49,7 +56,7 @@
   display: block;
   outline: none;
   padding: 7px 10px;
-  height: 60px;
+  height: 48px;
   width: 100%;
   color: #fff;
   -webkit-appearance: none;
@@ -119,4 +126,33 @@
 
 .chat-line-emote {
   margin: -.5rem 0;
+  vertical-align: middle;
+}
+
+.chat-line-badge-moderator {
+  background-color: #34ae0a;
+}
+
+.chat-line-mentioned {
+  background: rgba(255, 0, 0, 0.3) !important;
+}
+
+.chat-status {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background: rgba(#000, .8);
+  padding: 10px 12px;
+  left: 0;
+  bottom: calc(100% - 20px);
+  font-size: 14px;
+  pointer-events: none;
+  &.clickable {
+    cursor: pointer;
+    pointer-events: all;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

@@ -4,14 +4,17 @@ import elements from './elements';
 import regexes from './regexes';
 
 import AppNode from './nodes/App';
+import BTTVModule from './modules/BTTV';
 import BadgesModule from './modules/Badges';
 import ClickModule from './modules/Click';
 import EmotesModule from './modules/Emotes';
+import FFZModule from './modules/FFZ';
 import SettingsModule from './modules/Settings';
 
 import TwitchAuthClient from './modules/TwitchAuthClient';
 import TwitchHelixClient from './modules/TwitchHelixClient';
 import TwitchConnection from './modules/TwitchConnection';
+import PubsubConnection from './modules/PubsubConnection';
 
 const authClient = new TwitchAuthClient();
 const helixClient = new TwitchHelixClient();
@@ -20,7 +23,9 @@ class App {
   constructor() {
     this.receiverConnection = null;
     this.sendConnection = null;
+    this.pubsubConnection = null;
     this.currentRoomstate = {};
+    this.isMod = null;
     this.app = new AppNode(document.getElementById('app'));
   }
 
@@ -61,7 +66,6 @@ class App {
   validateToken(channelName, channelID) {
     const { oauthToken } = localStorage;
     authClient.validateToken(oauthToken, (err, payload) => {
-      console.log(err, payload);
       if (err || !payload || !payload.user_id) {
         localStorage.removeItem('oauthToken');
         this.start();
@@ -71,10 +75,12 @@ class App {
         BadgesModule.fetchGlobalBadges(),
         BadgesModule.fetchChannelBadges(channelID),
         EmotesModule.fetchGlobalTwitchEmotes(payload.user_id, oauthToken),
+        BTTVModule.fetchGlobalEmotes(),
+        BTTVModule.fetchChannelEmotes(channelName),
+        FFZModule.fetchGlobalEmotes(),
+        FFZModule.fetchChannelEmotes(channelID),
       ]).then((res) => {
-        const [globalBadges, channelBadges] = res;
-        console.log(globalBadges, channelBadges);
-        this.connect(payload.login, localStorage.oauthToken, channelName, channelID);
+        this.connect(payload.login, payload.user_id, localStorage.oauthToken, channelName, channelID);
         new ClickModule();
       })
       .catch((err) => {
@@ -83,35 +89,60 @@ class App {
     });
   }
 
-  connect(username, password, channelName, channelID) {
+  connect(username, userID, password, channelName, channelID) {
     this.receiverConnection = new TwitchConnection(username, password, channelName, channelID);
     this.sendConnection = new TwitchConnection(username, password, null, null);
-    Promise.all([
-      this.receiverConnection.connect(),
-      this.sendConnection.connect(),
-    ])
+    this.sendConnection.connect()
+    .then(() => this.receiverConnection.connect())
     .then(() => {
-      this.app.startChannel(channelName);
+      this.receiverConnection.on('ROOMSTATE', (message) => {
+        if (!this.app.nodes.roomstate) {
+          return;
+        }
+        this.currentRoomstate = assign({}, this.currentRoomstate, message.tags);
+        this.app.nodes.roomstate.updateRoomstate(this.currentRoomstate);
+      });
+      this.receiverConnection.on('CLEARCHAT', (message) => {
+        if (!this.app.nodes.messages) {
+          return;
+        }
+        this.app.nodes.messages.receiveClearchat(message, this.isMod);
+      });
+      this.receiverConnection.on('USERSTATE', (message) => {
+        console.log(message, this.isMod);
+        if (this.isMod === null) {
+          this.app.startChannel(channelName);
+        }
+        if (message.tags.badges.includes('moderator')) {
+          if (this.isMod === null || this.isMod === false) {
+            this.connectPubsub(password)
+              .then(() => {
+                this.pubsubConnection.subscribeTopic(`chat_moderator_actions.${userID}.${channelID}`);
+                this.registerPubsubEvents();
+              });
+
+          }
+          this.isMod = true;
+
+        } else {
+          this.isMod = false;
+        }
+      });
+      this.receiverConnection.on('PRIVMSG', (message) => this.handleMessage(message));
+      this.receiverConnection.on('USERNOTICE', (message) => this.handleMessage(message));
+      this.receiverConnection.on('NOTICE', (message) => this.handleMessage(message));
     });
-    this.receiverConnection.on('ROOMSTATE', (message) => {
-      if (!this.app.nodes.roomstate) {
-        return;
-      }
-      this.currentRoomstate = assign({}, this.currentRoomstate, message.tags);
-      this.app.nodes.roomstate.updateRoomstate(this.currentRoomstate);
+  }
+
+  registerPubsubEvents() {
+    this.pubsubConnection.on('new', (message) => {
+      this.app.nodes.messages.receivePubsub(message);
     });
-    this.receiverConnection.on('CLEARCHAT', (message) => {
-      if (!this.app.nodes.messages) {
-        return;
-      }
-      const messages = this.app.nodes.messages.node.querySelectorAll(`[data-user-id="${message.tags['target-user-id']}"`);
-      for (let i = 0; i < messages.length; i++) {
-        messages[i].classList.add('chat-line-deleted');
-      }
-    });
-    this.receiverConnection.on('PRIVMSG', (message) => this.handleMessage(message));
-    this.receiverConnection.on('USERNOTICE', (message) => this.handleMessage(message));
-    this.receiverConnection.on('NOTICE', (message) => this.handleMessage(message));
+  }
+
+  connectPubsub(token) {
+    this.pubsubConnection = new PubsubConnection(token);
+    return this.pubsubConnection.connect();
   }
 
   handleMessage(message) {

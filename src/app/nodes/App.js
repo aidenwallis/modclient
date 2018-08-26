@@ -1,3 +1,4 @@
+import elements from '../elements';
 import mainTemplate from '../templates/main';
 import loadingTemplate from '../templates/loading';
 
@@ -40,10 +41,11 @@ class AppNode extends ElementNode {
       roomstate: new RoomstateNode(document.getElementById('chat-roomstate')),
       chatForm: new ChatFormNode(document.getElementById('chat-form')),
       messages: new ChatMessagesNode(document.getElementById('chat-messages')),
+      footer: new ElementNode(document.getElementById('chat-footer')),
       // chatlist: new ChatlistNode(document.getElementById('chatlist-button')),
       settings: new SettingsButtonNode(document.getElementById('settings-button')),
     };
-
+    elements.footer = this.nodes.footer;
   }
 }
 

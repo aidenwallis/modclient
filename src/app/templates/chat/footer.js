@@ -1,5 +1,5 @@
 const chatFooterTemplate = `
-  <div class="chat-footer">
+  <div id="chat-footer" class="chat-footer">
     <form id="chat-form">
       <div class="chat-form">
         <textarea id="chat-input" class="chat-input" placeholder="Enter a message..."></textarea>

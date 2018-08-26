@@ -1,5 +1,6 @@
 import escape from 'lodash/escape';
 import regexes from '../../regexes';
+import chatIconsTemplate from './icons';
 import sdbmCode from '../../util/sdbmCode';
 import badgeTemplate from './badge';
 import BadgesModule from '../../modules/Badges';
@@ -51,7 +52,7 @@ function renderText(message, emotes) {
   return final;
 }
 
-function messageTemplate(message) {
+function messageTemplate(message, isMod) {
   const badges = message.tags.badges.split(',')
     .map((b) => {
       const split = b.split('/');
@@ -102,6 +103,7 @@ function messageTemplate(message) {
   const action = regexes.action.exec(message.trailing);
   const content = action ? action[1] : message.trailing;
   return `
+    ${isMod ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
     <span class="chat-line-badges">${badges}</span>
     <span class="chat-line-name">
       <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span><span class="chat-line-colon">:</span>
@@ -111,3 +113,4 @@ function messageTemplate(message) {
 }
 
 export default messageTemplate;
+// channel, username, msgId, userId, displayName

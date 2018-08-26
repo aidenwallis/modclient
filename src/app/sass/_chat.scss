@@ -76,15 +76,51 @@
   width: 35px;
   height: 35px;
   padding: 0;
-  line-height: 30px;
+  line-height: 35px;
   color: #fff;
   margin-bottom: 3px;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .chat-line {
   padding: 4px 10px;
-  color: rgb(218, 218, 218);
+  color: $line-color;
+  &-mod-icon {
+    font-size: 16px;
+    color: #898395;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    font-weight: 700;
+    &:hover {
+      color: #dad8de;
+    }
+    &-text {
+      margin-left: 2px;
+    }
+    .fa {
+      pointer-events: none;
+    }
+  }
+  &-mod-icons {
+    margin-right: 4px;
+  }
+}
+// {font-size:16px;color:#898395!important;margin-right:3px
+.setting-chat-chatlines {
+  .chat-line {
+    border-top: 1px solid rgba(#fff, .1);
+    border-bottom: 1px solid #000;
+  }
 }
 
 .chat-line-badge {
@@ -107,7 +143,7 @@
 }
 
 .chat-line-notice {
-  color: #868686;
+  color: $grey;
   font-size: 12px;
   line-height: 20px;
 }
@@ -130,7 +166,7 @@
 }
 
 .chat-line-badge-moderator {
-  background-color: #34ae0a;
+  background-color: $mod;
 }
 
 .chat-line-mentioned {
@@ -154,5 +190,32 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+.chat-line-automod {
+  &-button {
+    background: transparent;
+    -webkit-appearance: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
+    &-approve {
+      color: $mod;
+    }
+    &-deny {
+      color: $danger;
+    }
+    .fa {
+      pointer-events: none;
+    }
+  }
+  &-reason {
+    color: $grey;
+    font-size: 12px;
+    line-height: 20px;
+    font-style: italic;
   }
 }

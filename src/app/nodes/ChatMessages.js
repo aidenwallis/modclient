@@ -4,6 +4,7 @@ import PubsubTimeoutNode from './PubsubTimeout';
 import SettingsModule from '../modules/Settings';
 import messageTemplate from '../templates/chat/message';
 import noticeTemplate from '../templates/chat/notice';
+import automodTemplate from '../templates/chat/automod';
 
 class ChatMessages extends ElementNode {
   constructor(node) {
@@ -19,28 +20,20 @@ class ChatMessages extends ElementNode {
     setInterval(() => this.updateMessages(), 100);
   }
 
-  receiveMessage(message) {
-    const parsedMessage = this.parseMessage(message);
+  receiveMessage(message, isMod = false) {
+    const parsedMessage = this.parseMessage(message, isMod);
     if (!parsedMessage) {
       return;
     }
-    const line = document.createElement('div');
-    line.className = 'chat-line';
-    line.innerHTML = parsedMessage;
-    line.dataset.userId = message.tags['user-id'];
-    this.collectedMessages.push({
-      type: 'message',
-      data: message,
-      node: line,
-    });
+    this.pushMessageToBuffer(parsedMessage, message);
   }
 
-  parseMessage(message) {
+  parseMessage(message, isMod = false) {
     switch (message.command) {
       case 'PRIVMSG':
-        return messageTemplate(message);
+        return messageTemplate(message, isMod);
       case 'NOTICE':
-        return noticeTemplate(message);
+        return noticeTemplate(message.trailing);
       case 'CLEARCHAT':
         return clearchatTemplate(message);
       default:
@@ -81,7 +74,7 @@ class ChatMessages extends ElementNode {
         }
       }
     }
-    this.node.scrollTo(0, this.node.scrollHeight);
+    this.node.scrollTo(0, this.node.scrollHeight + 1000);
   }
 
   hoverOver() {
@@ -148,11 +141,27 @@ class ChatMessages extends ElementNode {
     });
   }
 
-  receiveClearchat(message) {
+  receiveClearchat(message, isMod = false) {
     this.collectedMessages.push({
       type: 'modaction',
       data: message,
     });
+    if (!isMod) {
+      let text = '';
+      text += message.trailing;
+      text += ' has been ';
+      text += message.tags['ban-duration'] ? 'timed out' : 'banned';
+      if (message.tags['ban-duration']) {
+        text += ' for ';
+        text += `${message.tags['ban-duration']} second${message.tags['ban-duration'] != 1 ? 's' : ''}`;
+      }
+      text + '.';
+      if (message.tags['ban-reason'] !== '') {
+        text += ' Reason: ';
+        text += message.tags['ban-reason'];
+      }
+      this.pushMessageToBuffer(noticeTemplate(text), message);
+    }
   }
 
   receivePubsub(message) {
@@ -207,10 +216,26 @@ class ChatMessages extends ElementNode {
   }
 
   handleAutomod(message) {
-
+    this.pushMessageToBuffer(automodTemplate(message), message);
   }
 
   handlePubsubCommand(message) {
+    const text = `${message.created_by} used command: /${message.moderation_action}${message.args ? ' ' + message.args.join(' ') : ''}`;
+    this.pushMessageToBuffer(noticeTemplate(text), message);
+  }
+
+  pushMessageToBuffer(node, message, type = 'message') {
+    const line = document.createElement('div');
+    line.className = 'chat-line';
+    line.innerHTML = node;
+    if (message.tags && message.tags['user-id']) {
+      line.dataset.userId = message.tags['user-id'];
+    }
+    this.collectedMessages.push({
+      type: 'message',
+      data: message,
+      node: line,
+    });
   }
 }
 

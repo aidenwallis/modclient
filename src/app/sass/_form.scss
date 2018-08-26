@@ -1,5 +1,4 @@
 .input {
-  -webkit-appearance: none;
   border-radius: 3px;
   background: lighten($dark, 3);
   box-shadow: none;
@@ -11,5 +10,59 @@
   color: #fff;
   &:focus {
     border-color: $blue;
+  }
+  &:not(select) {
+    -webkit-appearance: none;
+  }
+  &-block {
+    width: 100%;
+    display: block;
+  }
+  &-thin {
+    width: 30px;
+    text-align: center;
+    padding: 7px 0;
+  }
+}
+
+select.input {
+  height: 34px;
+  padding-right: 24px;
+}
+
+.button {
+  background: $twitch;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 3px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  font-weight: 500;
+  &:hover {
+    background: lighten($twitch, 2);
+  }
+  &:active {
+    background: darken($twitch, 2);
+  }
+}
+
+.form-group {
+  margin-bottom: 14px;
+  label {
+    color: #fff;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  input:not([type='checkbox']) {
+    display: block;
+    width: 100%;
+  }
+  input[type='checkbox'] {
+    margin-right: 7px;
   }
 }

@@ -4,6 +4,11 @@ const defaultSettings = {
       mode: 1, // 0 = disabled, 1 = hover, 2 = ctrl
     },
   },
+  appearance: {
+    css: null,
+    chatLines: false,
+  },
+  modLineIcons: [],
 };
 
 class SettingsModule {
@@ -21,7 +26,23 @@ class SettingsModule {
       settings = defaultSettings;
     }
     this.settings = settings;
+    this.pushChanges();
     return settings;
+  }
+
+  updateSettings(newSettings) {
+    this.settings = newSettings;
+    localStorage.setItem('settings', JSON.stringify(newSettings));
+    this.pushChanges();
+    return newSettings;
+  }
+
+  pushChanges() {
+    if (this.settings.appearance.chatLines) {
+      document.body.classList.add('setting-chat-chatlines');
+    } else {
+      document.body.classList.remove('setting-chat-chatlines');
+    }
   }
 }
 

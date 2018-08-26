@@ -26,7 +26,10 @@ class App {
     this.pubsubConnection = null;
     this.currentRoomstate = {};
     this.isMod = null;
+    this.token = null;
     this.app = new AppNode(document.getElementById('app'));
+    this.start = this.start.bind(this);
+    this.validateToken = this.validateToken.bind(this);
   }
 
   start() {
@@ -64,8 +67,9 @@ class App {
   }
 
   validateToken(channelName, channelID) {
-    const { oauthToken } = localStorage;
-    authClient.validateToken(oauthToken, (err, payload) => {
+    const token = localStorage.oauthToken;
+    this.token = token;
+    authClient.validateToken(token, (err, payload) => {
       if (err || !payload || !payload.user_id) {
         localStorage.removeItem('oauthToken');
         this.start();
@@ -74,14 +78,14 @@ class App {
       Promise.all([
         BadgesModule.fetchGlobalBadges(),
         BadgesModule.fetchChannelBadges(channelID),
-        EmotesModule.fetchGlobalTwitchEmotes(payload.user_id, oauthToken),
+        EmotesModule.fetchGlobalTwitchEmotes(payload.user_id, token),
         BTTVModule.fetchGlobalEmotes(),
         BTTVModule.fetchChannelEmotes(channelName),
         FFZModule.fetchGlobalEmotes(),
         FFZModule.fetchChannelEmotes(channelID),
       ]).then((res) => {
-        this.connect(payload.login, payload.user_id, localStorage.oauthToken, channelName, channelID);
-        new ClickModule();
+        this.connect(payload.login, payload.user_id, token, channelName, channelID);
+        new ClickModule(token);
       })
       .catch((err) => {
         console.error('error while loading badges', err);
@@ -113,17 +117,17 @@ class App {
         if (this.isMod === null) {
           this.app.startChannel(channelName);
         }
-        if (message.tags.badges.includes('moderator')) {
+        const isMod = message.tags.badges.includes('moderator') || message.tags.badges.includes('broadcaster');
+        console.log(isMod);
+        if (isMod) {
           if (this.isMod === null || this.isMod === false) {
             this.connectPubsub(password)
               .then(() => {
                 this.pubsubConnection.subscribeTopic(`chat_moderator_actions.${userID}.${channelID}`);
                 this.registerPubsubEvents();
               });
-
           }
           this.isMod = true;
-
         } else {
           this.isMod = false;
         }
@@ -149,7 +153,7 @@ class App {
     if (!this.app.nodes.messages) {
       return;
     }
-    this.app.nodes.messages.receiveMessage(message);
+    this.app.nodes.messages.receiveMessage(message, this.isMod);
   }
 
   sendMessage(message) {

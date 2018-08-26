@@ -36,9 +36,14 @@ p {
   }
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 @import 'overlays';
 @import 'panels';
 @import 'form';
 @import 'alert';
 @import 'loader';
 @import 'chat';
+@import 'settings';

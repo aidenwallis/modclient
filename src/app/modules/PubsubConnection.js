@@ -70,7 +70,7 @@ class PubsubConnection extends EventEmitter {
         return console.error('failed to parse pubsub msg', event);
       }
       const { data } = message;
-      if (data.type !== 'chat_login_moderation') {
+      if (data.type !== 'chat_login_moderation' && data.type !== 'chat_channel_moderation') {
         return;
       }
       this.emit('new', data);

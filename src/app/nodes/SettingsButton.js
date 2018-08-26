@@ -1,14 +1,18 @@
 import ElementNode from '../modules/ElementNode';
+import SettingsNode from './Settings';
+
 
 class SettingsButton extends ElementNode {
   constructor(node) {
     super(node);
 
-    this.node.onclick = () => this.openSettings();
+    this.node.onclick = e => this.openSettings(e);
   }
 
-  openSettings() {
-    console.log('open settings');
+  openSettings(e) {
+    e.preventDefault();
+    const newNode = new SettingsNode(document.getElementById('portal'));
+    newNode.render();
   }
 }
 

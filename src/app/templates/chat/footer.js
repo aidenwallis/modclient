@@ -1,4 +1,4 @@
-const chatFooterTemplate = `
+const chatFooterTemplate = (channel) => `
   <div id="chat-footer" class="chat-footer">
     <form id="chat-form">
       <div class="chat-form">
@@ -6,7 +6,9 @@ const chatFooterTemplate = `
       </div>
       <div class="chat-bottom">
         <button id="settings-button" class="chat-bottom-button" title="Modclient Settings"><i class="fa fa-cog fa-fw"></i></button>
-        <button id="chatlist-button" class="chat-bottom-button" title="Chatter list"><i class="fa fa-list fa-fw"></i></button>
+        <a target="_blank" class="chat-bottom-button" title="Chatter list" href="https://twitchstuff.3v.fi/chatters/?ch=${channel}" rel="noopener noreferrer">
+          <i class="fa fa-list fa-fw"></i>
+        </a>
       </div>
     </form>
   </div>

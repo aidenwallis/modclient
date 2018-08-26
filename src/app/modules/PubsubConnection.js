@@ -8,6 +8,7 @@ class PubsubConnection extends EventEmitter {
     super();
     this.token = token;
     this.topics = {};
+    this.interval = null;
     this.connected = false;
     this.connection = null;
   }
@@ -30,12 +31,18 @@ class PubsubConnection extends EventEmitter {
         }
         console.log('Connected to Pubsub!');
         setInterval(() => {
-          this.send('PONG', null);
+          this.send('PING', null);
         }, 30 * 1000);
         resolve();
       };
       this.client.onmessage = (e) => {
         this.handleMessage(e.data);
+      };
+      this.client.onerror = (e) => {
+        if (e.code === 'ECONNREFUSED' && !this.interval) {
+          this.connected = false;
+          this.interval = setInterval(() => this.connect(), 2000);
+        }
       };
     });
   }

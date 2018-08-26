@@ -1,4 +1,5 @@
 import escape from 'lodash/escape';
+import regexes from '../../regexes';
 import sdbmCode from '../../util/sdbmCode';
 import badgeTemplate from './badge';
 import BadgesModule from '../../modules/Badges';
@@ -98,12 +99,14 @@ function messageTemplate(message) {
   }
   const escapedDisplayName = escape(message.tags['display-name']);
   const intlName = escapedDisplayName.toLowerCase() !== escapedUsername;
+  const action = regexes.action.exec(message.trailing);
+  const content = action ? action[1] : message.trailing;
   return `
     <span class="chat-line-badges">${badges}</span>
     <span class="chat-line-name">
       <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span><span class="chat-line-colon">:</span>
     </span>
-    <span class="chat-line-text">${renderText(escape(message.trailing), emotes)}</span>
+    <span class="chat-line-text${action ? ' chat-line-text-action' : ''}"${action ? `style="color: ${color}"` : ''}>${renderText(escape(content), emotes)}</span>
   `;
 }
 

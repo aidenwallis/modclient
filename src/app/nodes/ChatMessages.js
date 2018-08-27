@@ -13,6 +13,7 @@ class ChatMessages extends ElementNode {
     this.collectedMessages = [];
     this.currentMessages = [];
     this.hoverPause = false;
+    this.activeChatlines = null;
     this.scrollPause = false;
     this.node.onmouseover = () => this.hoverOver();
     this.node.onmouseout = () => this.hoverOut();
@@ -75,11 +76,10 @@ class ChatMessages extends ElementNode {
             messages[i].classList.add('chat-line-deleted');
           }
         }
-        window.requestAnimationFrame(() => {
+        setTimeout(() => {
           this.node.scrollTop = this.node.scrollHeight + 10000;
-        });
-        // this.node.scrollTo(0, this.node.scrollHeight + 10000);
-        this.scrollPause = false;
+        }, 1);
+        // this.scrollPause = false;
       }
     }
   }
@@ -110,7 +110,7 @@ class ChatMessages extends ElementNode {
     if (this.scrollPause) {
       reason = 'More messages below';
       hoverNode.classList.add('clickable');
-      hoverNode.onclick = () => this.node.scrollTo(0, this.node.scrollHeight);
+      hoverNode.onclick = () => this.node.scrollTo(0, this.node.scrollHeight + 10000);
     } else if (this.hoverPause) {
       reason = '(Chat paused due to user action)';
     } else {
@@ -146,6 +146,36 @@ class ChatMessages extends ElementNode {
       }
       this.checkStatusNode();
     });
+    // const element = e.target;
+    // const scrollPos = element.scrollTop;
+    // const scrollLenience = element.innerHeight / 4;
+    // const isNearBottom = scrollPos + element.innerHeight >= element.scrollHeight - 30;
+    // const isNearBottom = scrollPos + $element.innerHeight() >= $element[0].scrollHeight - scrollLenience;
+    // if (isNearBottom) {
+    //   this.baseLine = Math.min(this.chatLines.length - 1, this.baseLine + this.pageSize);
+    //   this.markActiveChatLinesDirty();
+    // }
+    // const isNearTop = scrollPos <= scrollLenience;
+    // if (isNearTop) {
+    //   this.baseLine = Math.max(this.pagesToShow * this.pageSize, this.baseLine - this.pageSize);
+    //   this.markActiveChatLinesDirty();
+    // }
+
+    // const isVeryCloseToBottom = scrollPos + $element.innerHeight() >= $element[0].scrollHeight - 30;
+    // if (!isVeryCloseToBottom && this.baseLine === this.chatLines.length - 1) {
+    //   this.scrollPause = true;
+    //   if (this.hoverPause) {
+    //     this.removeStatusNode();
+    //   }
+    //   this.spawnChatStatus();
+    // } else {
+    //   this.scrollPause = false;
+    // }
+    // this.checkStatusNode();
+  }
+
+  markActiveChatLinesDirty() {
+    this.activeChatlines = null;
   }
 
   receiveClearchat(message, isMod = false) {

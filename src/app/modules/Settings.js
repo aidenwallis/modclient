@@ -37,13 +37,13 @@ class SettingsModule {
       localStorage.setItem('settings', JSON.stringify(defaultSettings));
       settings = defaultSettings;
     }
-    this.settings = settings;
+    this.settings = assign({}, defaultSettings, settings);
     this.pushChanges();
     return settings;
   }
 
   updateSettings(newSettings) {
-    this.settings = newSettings;
+    this.settings = assign({}, this.settings, newSettings);
     localStorage.setItem('settings', JSON.stringify(newSettings));
     this.pushChanges();
     return newSettings;

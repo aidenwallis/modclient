@@ -73,11 +73,11 @@ class ChatMessages extends ElementNode {
             messages[i].classList.add('chat-line-deleted');
           }
         }
+        this.node.scrollTop = this.node.scrollHeight + 10000;
+        // this.node.scrollTo(0, this.node.scrollHeight + 10000);
+        this.scrollPause = false;
       }
     }
-    this.node.scrollTop = this.node.scrollHeight + 10000;
-    // this.node.scrollTo(0, this.node.scrollHeight + 10000);
-    this.scrollPause = false;
   }
 
   hoverOver() {

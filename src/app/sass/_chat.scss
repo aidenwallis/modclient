@@ -151,6 +151,13 @@
 .chat-line-text {
   font-size: 12px;
   line-height: 20px;
+  a {
+    color: $grey;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .chat-line-deleted {

@@ -75,7 +75,8 @@ class ChatMessages extends ElementNode {
         }
       }
     }
-    this.node.scrollTo(0, this.node.scrollHeight + 1000);
+    this.node.scrollTop = this.node.scrollHeight + 10000;
+    // this.node.scrollTo(0, this.node.scrollHeight + 10000);
     this.scrollPause = false;
   }
 
@@ -134,8 +135,8 @@ class ChatMessages extends ElementNode {
         this.scrollPause = true;
         if (this.hoverPause) {
           this.removeStatusNode();
-          this.spawnChatStatus();
         }
+        this.spawnChatStatus();
       } else if (this.scrollPause) {
         this.scrollPause = false;
       }

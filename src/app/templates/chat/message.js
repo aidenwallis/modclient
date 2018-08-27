@@ -87,8 +87,8 @@ function messageTemplate(message, isMod) {
       for (let j = 0; j < positions.length; j++) {
         const [start, end] = positions[j].split('-');
         emotes.push({
-          start: parseInt(start),
-          end: parseInt(end),
+          start: parseInt(start, 10),
+          end: parseInt(end, 10),
           id: emoteId,
         });
       }

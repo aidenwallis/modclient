@@ -42,6 +42,7 @@ class ChatMessages extends ElementNode {
   }
 
   updateMessages() {
+    console.log('hover pause', this.hoverPause, 'scroll pause', this.scrollPause);
     if (this.hoverPause || this.scrollPause) {
       return;
     }
@@ -79,7 +80,7 @@ class ChatMessages extends ElementNode {
   }
 
   hoverOver() {
-    if (SettingsModule.settings.chat.pause.mode === 1 && !this.hoverPause) {
+    if (SettingsModule.settings.chat.pause.mode === 1) {
       this.hoverPause = true;
       if (!this.statusNode) {
         this.spawnChatStatus();
@@ -88,7 +89,7 @@ class ChatMessages extends ElementNode {
   }
 
   hoverOut() {
-    if (SettingsModule.settings.chat.pause.mode === 1 && this.hoverPause) {
+    if (SettingsModule.settings.chat.pause.mode === 1) {
       this.hoverPause = false;
     }
     this.checkStatusNode();

@@ -24,7 +24,7 @@ function renderWord(message, word) {
 
 // this emote formatting i found by alca, props to him!
 function renderText(message, emotes) {
-  const characterArray = Array.from(message);
+  const characterArray = message.split('');
   for (let i = 0; i < emotes.length; i++) {
     const emote = emotes[i];
     const emoteName = characterArray.slice(emote.start, emote.end + 1).join('');

@@ -27,6 +27,7 @@ class SettingsModule {
   constructor() {
     this.settings = defaultSettings;
     this.fetchSettings = this.fetchSettings.bind(this);
+    this.customCSSNode = null;
   }
 
   fetchSettings() {
@@ -49,13 +50,37 @@ class SettingsModule {
     return newSettings;
   }
 
+  spawnCSSNode() {
+    const node = document.createElement('link');
+    node.rel = 'stylesheet';
+    node.href = this.settings.appearance.css;
+    this.customCSSNode = node;
+    document.getElementsByTagName('head')[0].appendChild(node);
+  }
+
   pushChanges() {
     if (this.settings.appearance.chatLines) {
       document.body.classList.add('setting-chat-chatlines');
     } else {
       document.body.classList.remove('setting-chat-chatlines');
     }
+    if (this.settings.appearance.css) {
+      if (this.customCSSNode && this.customCSSNode.src !== this.settings.appearance.css) {
+        if (this.customCSSNode) {
+          this.customCSSNode.parentNode.removeChild(this.customCSSNode);
+        }
+        this.spawnCSSNode();
+      } else if (!this.customCSSNode) {
+        this.spawnCSSNode();
+      }
+    } else if (this.customCSSNode) {
+      this.customCSSNode.parentNode.removeChild(this.customCSSNode);
+    }
   }
 }
 
 export default new SettingsModule();
+
+function removeElement(node) {
+  node.parentNode.removeChild(node);
+}

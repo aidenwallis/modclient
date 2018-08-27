@@ -24,7 +24,6 @@ function chatRoomstateTemplate(tags) {
   if (tags['subs-only'] && tags['subs-only'] > 0) {
     element += roomstateItemTemplate('SUBS', 'subs');
   }
-  console.log(element);
   return element;
 }
 

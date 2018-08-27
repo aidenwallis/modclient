@@ -133,7 +133,7 @@ class App {
         }
       });
       this.receiverConnection.on('PRIVMSG', (message) => this.handleMessage(message));
-      this.receiverConnection.on('USERNOTICE', (message) => this.handleMessage(message));
+      this.receiverConnection.on('USERNOTICE', (message) => this.handleUsernotice(message));
       this.receiverConnection.on('NOTICE', (message) => this.handleMessage(message));
     });
   }
@@ -154,6 +154,13 @@ class App {
       return;
     }
     this.app.nodes.messages.receiveMessage(message, this.isMod);
+  }
+
+  handleUsernotice(message) {
+    if (!this.app.nodes.messages) {
+      return;
+    }
+    this.app.nodes.messages.receiveUsernotice(message, this.isMod);
   }
 
   sendMessage(message) {

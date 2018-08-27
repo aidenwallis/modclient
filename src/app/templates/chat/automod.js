@@ -1,6 +1,11 @@
 import chatIconsTemplate from './icons';
 import messageTemplate from './message';
-
+// prefix: data.args[0],
+//     trailing: data.args[1],
+//     tags: {
+//       badges: '',
+//       'display-name': data.args[0],
+//     },
 const automodTemplate = (data) => `
   ${chatIconsTemplate()}
   <span class="chat-line-automod">

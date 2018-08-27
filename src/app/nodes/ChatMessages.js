@@ -5,6 +5,7 @@ import SettingsModule from '../modules/Settings';
 import messageTemplate from '../templates/chat/message';
 import noticeTemplate from '../templates/chat/notice';
 import automodTemplate from '../templates/chat/automod';
+import usernoticeTemplate from '../templates/chat/usernotice';
 
 class ChatMessages extends ElementNode {
   constructor(node) {
@@ -29,6 +30,7 @@ class ChatMessages extends ElementNode {
   }
 
   parseMessage(message, isMod = false) {
+    if (message.command === 'USERNOTICE') { console.log(message); }
     switch (message.command) {
       case 'PRIVMSG':
         return messageTemplate(message, isMod);
@@ -234,6 +236,18 @@ class ChatMessages extends ElementNode {
     if (message.tags && message.tags['user-id']) {
       line.dataset.userId = message.tags['user-id'];
     }
+    this.collectedMessages.push({
+      type: 'message',
+      data: message,
+      node: line,
+    });
+  }
+
+  receiveUsernotice(message) {
+    const line = document.createElement('div');
+    line.className = 'chat-line chat-line-usernotice';
+    line.innerHTML = usernoticeTemplate(message);
+    line.dataset.userId = message.tags['user-id'];
     this.collectedMessages.push({
       type: 'message',
       data: message,

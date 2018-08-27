@@ -75,6 +75,7 @@ class ChatMessages extends ElementNode {
       }
     }
     this.node.scrollTo(0, this.node.scrollHeight + 1000);
+    this.scrollPause = false;
   }
 
   hoverOver() {

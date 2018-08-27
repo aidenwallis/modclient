@@ -230,12 +230,17 @@
 .chat-line-usernotice {
   padding: 5px 20px 5px 16px;
   border-left: 4px solid $twitch;
+  color: $line-color;
   background: hsla(0, 0%, 50%, .1);
   word-wrap: break-word;
   &-name {
     color: #fff !important;
     text-decoration: none !important;
     font-weight: 700;
+  }
+  &-prime {
+    text-decoration: underline !important;
+    color: lighten($line-color, 1) !important;
   }
 }
 

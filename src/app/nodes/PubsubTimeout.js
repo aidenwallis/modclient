@@ -19,7 +19,6 @@ class PubsubTimeoutNode extends ElementNode {
 
   generateMessage() {
     let text = '';
-    console.log(this.data);
     text += this.data.created_by;
     text += ' ';
     text += this.data.moderation_action === 'timeout' ? 'timed out' : 'banned';
@@ -43,4 +42,3 @@ class PubsubTimeoutNode extends ElementNode {
 }
 
 export default PubsubTimeoutNode;
-// moobot timed out marzarko for 30 seconds. Reason: Spamming, automated by Moobot..

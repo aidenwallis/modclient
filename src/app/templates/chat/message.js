@@ -1,4 +1,5 @@
 import escape from 'lodash/escape';
+import findLast from 'lodash/findLast';
 import linkifyHtml from 'linkifyjs/html';
 import regexes from '../../regexes';
 import chatIconsTemplate from './icons';
@@ -6,6 +7,7 @@ import sdbmCode from '../../util/sdbmCode';
 import badgeTemplate from './badge';
 import BadgesModule from '../../modules/Badges';
 import BTTVModule from '../../modules/BTTV';
+import CheermotesModule from '../../modules/Cheermotes';
 import FFZModule from '../../modules/FFZ';
 import transformBadges from '../../util/transformBadges';
 
@@ -19,6 +21,17 @@ function renderWord(message, word) {
   }
   if (word[0] === '@') {
     return `<strong>${escape(word)}</strong>`;
+  }
+  const bitMatch = regexes.bitMatch.exec(word);
+  if (bitMatch && message.tags.bits) {
+    const cheermote = CheermotesModule.findCheermote(bitMatch[1]);
+    if (cheermote) {
+      const amount = parseInt(bitMatch[2], 10);
+      // find the correct tier
+      const cheerTier = findLast(cheermote.tiers, tier => tier.minBits <= amount);
+      return `<img class="chat-line-emote chat-line-cheermote chat-line-emote-${cheermote.name}" alt="${cheerTier.name}" title="${cheerTier.name}" src="${cheerTier.url}">`
+        + `<span class="chat-line-cheer-amount" style="color: ${cheerTier.color}">${amount}</span>`;
+    }
   }
   return escape(word);
 }
@@ -110,7 +123,6 @@ function messageTemplate(message, userBadges) {
   } else if (userBadges.moderator && !messageBadges.staff && !messageBadges.broadcaster && !messageBadges.moderator) {
     showIcons = true;
   }
-  console.log(userBadges, messageBadges);
   return `
     ${showIcons ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
     <span class="chat-line-badges">${badges}</span>

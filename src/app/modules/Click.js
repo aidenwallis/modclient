@@ -2,7 +2,6 @@ import app from '../App';
 import regexes from '../regexes';
 import EventHub from './EventHub';
 import TwitchKrakenClient from './TwitchKrakenClient';
-const krakenClient = new TwitchKrakenClient();
 
 class ClickModule {
   constructor(token) {
@@ -37,7 +36,7 @@ class ClickModule {
   }
 
   handleAutomodResponse(e) {
-    krakenClient.resolveAutomod(e.target.dataset.action, e.target.dataset.msgId, this.token);
+    TwitchKrakenClient.resolveAutomod(e.target.dataset.action, e.target.dataset.msgId, this.token);
   }
 
   handleSettingAction(e) {

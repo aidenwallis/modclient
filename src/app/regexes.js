@@ -10,7 +10,7 @@ const regexes = {
   userId: /{userId}/g,
   displayName: /{displayName}/g,
   prefixCheck: /^(?:[a-zA-Z]+:)?\/\//,
-  url: /((?:(?:https?):\/\/)?(?:\S+(?::\S*)?@)?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?)/gi,
+  bitMatch: /^(\w+?)(\d+)$/,
 };
 
 export default regexes;

@@ -31,7 +31,6 @@ class ChatMessages extends ElementNode {
   }
 
   parseMessage(message, isMod = false) {
-    if (message.command === 'USERNOTICE') { console.log(message); }
     switch (message.command) {
       case 'PRIVMSG':
         return messageTemplate(message, isMod);
@@ -45,7 +44,6 @@ class ChatMessages extends ElementNode {
   }
 
   updateMessages() {
-    console.log('hover pause', this.hoverPause, 'scroll pause', this.scrollPause);
     if (this.hoverPause || this.scrollPause) {
       return;
     }
@@ -77,7 +75,6 @@ class ChatMessages extends ElementNode {
           }
         }
         this.node.scrollTop = this.node.scrollHeight;
-        // this.scrollPause = false;
       }
     }
   }
@@ -145,32 +142,6 @@ class ChatMessages extends ElementNode {
       }
       this.checkStatusNode();
     });
-    // const element = e.target;
-    // const scrollPos = element.scrollTop;
-    // const scrollLenience = element.innerHeight / 4;
-    // const isNearBottom = scrollPos + element.innerHeight >= element.scrollHeight - 30;
-    // const isNearBottom = scrollPos + $element.innerHeight() >= $element[0].scrollHeight - scrollLenience;
-    // if (isNearBottom) {
-    //   this.baseLine = Math.min(this.chatLines.length - 1, this.baseLine + this.pageSize);
-    //   this.markActiveChatLinesDirty();
-    // }
-    // const isNearTop = scrollPos <= scrollLenience;
-    // if (isNearTop) {
-    //   this.baseLine = Math.max(this.pagesToShow * this.pageSize, this.baseLine - this.pageSize);
-    //   this.markActiveChatLinesDirty();
-    // }
-
-    // const isVeryCloseToBottom = scrollPos + $element.innerHeight() >= $element[0].scrollHeight - 30;
-    // if (!isVeryCloseToBottom && this.baseLine === this.chatLines.length - 1) {
-    //   this.scrollPause = true;
-    //   if (this.hoverPause) {
-    //     this.removeStatusNode();
-    //   }
-    //   this.spawnChatStatus();
-    // } else {
-    //   this.scrollPause = false;
-    // }
-    // this.checkStatusNode();
   }
 
   markActiveChatLinesDirty() {
@@ -252,7 +223,6 @@ class ChatMessages extends ElementNode {
   }
 
   handleAutomod(message, channel, channelID) {
-    console.log(message);
     this.pushMessageToBuffer(automodTemplate(message, channel, channelID), message);
   }
 

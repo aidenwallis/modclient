@@ -7,6 +7,7 @@ import transformBadges from './util/transformBadges';
 import AppNode from './nodes/App';
 import BTTVModule from './modules/BTTV';
 import BadgesModule from './modules/Badges';
+import CheermotesModule from './modules/Cheermotes';
 import ClickModule from './modules/Click';
 import EmotesModule from './modules/Emotes';
 import FFZModule from './modules/FFZ';
@@ -83,6 +84,7 @@ class App {
         EmotesModule.fetchGlobalTwitchEmotes(payload.user_id, token),
         BTTVModule.fetchGlobalEmotes(),
         BTTVModule.fetchChannelEmotes(channelName),
+        CheermotesModule.fetchCheermotes(channelID),
         FFZModule.fetchGlobalEmotes(),
         FFZModule.fetchChannelEmotes(channelID),
       ]).then((res) => {

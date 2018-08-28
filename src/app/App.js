@@ -2,6 +2,7 @@ import assign from 'lodash/assign';
 
 import elements from './elements';
 import regexes from './regexes';
+import transformBadges from './util/transformBadges';
 
 import AppNode from './nodes/App';
 import BTTVModule from './modules/BTTV';
@@ -27,6 +28,7 @@ class App {
     this.currentRoomstate = {};
     this.isMod = null;
     this.token = null;
+    this.userBadges = {};
     this.app = new AppNode(document.getElementById('app'));
     this.start = this.start.bind(this);
     this.validateToken = this.validateToken.bind(this);
@@ -113,12 +115,12 @@ class App {
         this.app.nodes.messages.receiveClearchat(message, this.isMod);
       });
       this.receiverConnection.on('USERSTATE', (message) => {
-        console.log(message, this.isMod);
         if (this.isMod === null) {
           this.app.startChannel(channelName);
         }
-        const isMod = message.tags.badges.includes('moderator') || message.tags.badges.includes('broadcaster');
-        console.log(isMod);
+        const badges = transformBadges(message.tags.badges);
+        this.userBadges = badges;
+        const isMod = badges.broadcaster || badges.moderator;
         if (isMod) {
           if (this.isMod === null || this.isMod === false) {
             this.connectPubsub(password)
@@ -153,14 +155,14 @@ class App {
     if (!this.app.nodes.messages) {
       return;
     }
-    this.app.nodes.messages.receiveMessage(message, this.isMod);
+    this.app.nodes.messages.receiveMessage(message, this.userBadges);
   }
 
   handleUsernotice(message) {
     if (!this.app.nodes.messages) {
       return;
     }
-    this.app.nodes.messages.receiveUsernotice(message, this.isMod);
+    this.app.nodes.messages.receiveUsernotice(message, this.userBadges);
   }
 
   sendMessage(message) {

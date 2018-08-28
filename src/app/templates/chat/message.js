@@ -53,7 +53,7 @@ function renderText(message, emotes, action) {
   return linkifyHtml(final);
 }
 
-function messageTemplate(message, isMod) {
+function messageTemplate(message, userBadges) {
   const badges = message.tags.badges.split(',')
     .map((b) => {
       const split = b.split('/');
@@ -102,8 +102,14 @@ function messageTemplate(message, isMod) {
   const escapedDisplayName = escape(message.tags['display-name']);
   const intlName = escapedDisplayName.toLowerCase() !== escapedUsername;
   const action = regexes.action.exec(message.trailing);
+  let showIcons = false;
+  if (badges.broadcaster && !badges.staff) {
+    showIcons = true;
+  } else if (badges.moderator && !badges.staff && !badges.broadcaster) {
+    showIcons = true;
+  }
   return `
-    ${isMod ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
+    ${showIcons ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
     <span class="chat-line-badges">${badges}</span>
     <span class="chat-line-name">
       <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span>${action ? '' : '<span class="chat-line-colon">:</span>'}

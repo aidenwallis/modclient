@@ -140,7 +140,7 @@ class App {
 
   registerPubsubEvents() {
     this.pubsubConnection.on('new', (message) => {
-      this.app.nodes.messages.receivePubsub(message);
+      this.app.nodes.messages.receivePubsub(message, this.receiverConnection.channel, this.receiverConnection.channelID);
     });
   }
 

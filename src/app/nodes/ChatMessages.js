@@ -200,16 +200,16 @@ class ChatMessages extends ElementNode {
     }
   }
 
-  receivePubsub(message) {
+  receivePubsub(message, channel, channelID) {
     switch (message.moderation_action) {
       case 'timeout':
-        return this.handlePubsubTimeout(message);
+        return this.handlePubsubTimeout(message, channel, channelID);
       case 'ban':
-        return this.handlePubsubTimeout(message);
+        return this.handlePubsubTimeout(message, channel, channelID);
       case 'automod_rejected':
-        return this.handleAutomod(message);
+        return this.handleAutomod(message, channel, channelID);
       default:
-        this.handlePubsubCommand(message);
+        this.handlePubsubCommand(message, channel, channelID);
         break;
     }
   }
@@ -251,9 +251,9 @@ class ChatMessages extends ElementNode {
     return [null, null, null];
   }
 
-  handleAutomod(message) {
+  handleAutomod(message, channel, channelID) {
     console.log(message);
-    this.pushMessageToBuffer(automodTemplate(message), message);
+    this.pushMessageToBuffer(automodTemplate(message, channel, channelID), message);
   }
 
   handlePubsubCommand(message) {

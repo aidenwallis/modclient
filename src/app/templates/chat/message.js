@@ -105,12 +105,12 @@ function messageTemplate(message, userBadges) {
   const action = regexes.action.exec(message.trailing);
   const messageBadges = transformBadges(message.tags.badges);
   let showIcons = false;
-  if (badges.broadcaster && !messageBadges.staff) {
+  if (userBadges.broadcaster && !messageBadges.staff) {
     showIcons = true;
-  } else if (badges.moderator && !messageBadges.staff && !messageBadges.broadcaster) {
+  } else if (userBadges.moderator && !messageBadges.staff && !messageBadges.broadcaster) {
     showIcons = true;
   }
-  console.log(badges, message.tags.badges);
+  console.log(userBadges, messageBadges);
   return `
     ${showIcons ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
     <span class="chat-line-badges">${badges}</span>

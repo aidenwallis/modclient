@@ -252,6 +252,7 @@ class ChatMessages extends ElementNode {
   }
 
   handleAutomod(message) {
+    console.log(message);
     this.pushMessageToBuffer(automodTemplate(message), message);
   }
 

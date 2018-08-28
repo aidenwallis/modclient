@@ -17,14 +17,14 @@ function renderWord(message, word) {
     return `<img src="${emote.url}" class="chat-line-emote chat-line-emote-${emote.id} chat-line-${emote.provider}-emote" data-provider="${emote.provider}" title="${word}">`;
   }
   if (word[0] === '@') {
-    return `<strong>${word}</strong>`;
+    return `<strong>${escape(word)}</strong>`;
   }
-  return word;
+  return escape(word);
 }
 
 // this emote formatting i found by alca, props to him!
 function renderText(message, emotes) {
-  const characterArray = message.split('');
+  const characterArray = message.trailing.split('');
   for (let i = 0; i < emotes.length; i++) {
     const emote = emotes[i];
     const emoteName = characterArray.slice(emote.start, emote.end + 1).join('');
@@ -102,14 +102,13 @@ function messageTemplate(message, isMod) {
   const escapedDisplayName = escape(message.tags['display-name']);
   const intlName = escapedDisplayName.toLowerCase() !== escapedUsername;
   const action = regexes.action.exec(message.trailing);
-  const content = escape(action ? action[1] : message.trailing);
   return `
     ${isMod ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
     <span class="chat-line-badges">${badges}</span>
     <span class="chat-line-name">
       <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span><span class="chat-line-colon">:</span>
     </span>
-    <span class="chat-line-text${action ? ' chat-line-text-action' : ''}"${action ? `style="color: ${color}"` : ''}>${renderText(content, emotes)}</span>
+    <span class="chat-line-text${action ? ' chat-line-text-action' : ''}"${action ? `style="color: ${color}"` : ''}>${renderText(message, emotes)}</span>
   `;
 }
 

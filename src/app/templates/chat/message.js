@@ -23,8 +23,8 @@ function renderWord(message, word) {
 }
 
 // this emote formatting i found by alca, props to him!
-function renderText(message, emotes) {
-  const characterArray = message.trailing.split('');
+function renderText(message, emotes, action) {
+  const characterArray = (action ? action[1] : message.trailing).split('');
   for (let i = 0; i < emotes.length; i++) {
     const emote = emotes[i];
     const emoteName = characterArray.slice(emote.start, emote.end + 1).join('');
@@ -108,7 +108,7 @@ function messageTemplate(message, isMod) {
     <span class="chat-line-name">
       <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span><span class="chat-line-colon">:</span>
     </span>
-    <span class="chat-line-text${action ? ' chat-line-text-action' : ''}"${action ? `style="color: ${color}"` : ''}>${renderText(message, emotes)}</span>
+    <span class="chat-line-text${action ? ' chat-line-text-action' : ''}"${action ? `style="color: ${color}"` : ''}>${renderText(message, emotes, action)}</span>
   `;
 }
 

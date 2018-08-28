@@ -76,9 +76,7 @@ class ChatMessages extends ElementNode {
             messages[i].classList.add('chat-line-deleted');
           }
         }
-        setTimeout(() => {
-          this.node.scrollTop = this.node.scrollHeight + 10000;
-        }, 1);
+        this.node.scrollTop = this.node.scrollHeight;
         // this.scrollPause = false;
       }
     }
@@ -134,7 +132,7 @@ class ChatMessages extends ElementNode {
 
   scroll(e) {
     window.requestAnimationFrame(() => {
-      const scrolledBottom = e.target.scrollTop >= e.target.scrollHeight - e.target.offsetHeight - 30;
+      const scrolledBottom = e.target.scrollTop <= e.target.scrollHeight - e.target.offsetHeight - 100;
       // const scrolledBottom = e.target.scrollTop === (e.target.scrollHeight - e.target.offsetHeight);
       if (!scrolledBottom) {
         this.scrollPause = true;

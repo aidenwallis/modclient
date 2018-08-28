@@ -132,7 +132,7 @@ class ChatMessages extends ElementNode {
 
   scroll(e) {
     window.requestAnimationFrame(() => {
-      const scrolledBottom = e.target.scrollTop <= e.target.scrollHeight - e.target.offsetHeight - 300;
+      const scrolledBottom = e.target.scrollTop <= (e.target.scrollHeight - e.target.offsetHeight) + 100;
       // const scrolledBottom = e.target.scrollTop === (e.target.scrollHeight - e.target.offsetHeight);
       if (!scrolledBottom) {
         this.scrollPause = true;

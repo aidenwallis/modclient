@@ -107,7 +107,7 @@ function messageTemplate(message, userBadges) {
   let showIcons = false;
   if (userBadges.broadcaster && !messageBadges.staff) {
     showIcons = true;
-  } else if (userBadges.moderator && !messageBadges.staff && !messageBadges.broadcaster) {
+  } else if (userBadges.moderator && !messageBadges.staff && !messageBadges.broadcaster && !messageBadges.moderator) {
     showIcons = true;
   }
   console.log(userBadges, messageBadges);

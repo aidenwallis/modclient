@@ -223,7 +223,7 @@ class ChatMessages extends ElementNode {
   }
 
   handleAutomod(message, channel, channelID) {
-    this.pushMessageToBuffer(automodTemplate(message, channel, channelID), message);
+    this.pushMessageToBuffer(automodTemplate(message, channel, channelID, true), message);
   }
 
   handlePubsubCommand(message) {

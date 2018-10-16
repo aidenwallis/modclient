@@ -1,6 +1,6 @@
 import chatIconsTemplate from './icons';
 import messageTemplate from './message';
-const automodTemplate = (data, channel, channelID) => `
+const automodTemplate = (data, channel, userBadges) => `
   ${chatIconsTemplate(channel, data.args[0], data['msg-id'], data.target_user_id, data.args[0])}
   <span class="chat-line-automod">
     <button class="chat-line-automod-button chat-line-automod-button-deny" data-msg-id="${data.msg_id}" data-action="deny">
@@ -17,7 +17,7 @@ const automodTemplate = (data, channel, channelID) => `
       badges: '',
       'display-name': data.args[0],
     },
-  })}
+  }, userBadges)}
   <span class="chat-line-automod-reason">&mdash; Reason: (${data.args[2]})</span>
 `;
 

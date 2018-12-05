@@ -3,6 +3,7 @@ import ElementNode from '../modules/ElementNode';
 class PubsubTimeoutNode extends ElementNode {
   constructor(data) {
     super();
+    this.oldData = data;
     this.data = data;
     this.node = document.createElement('div');
     this.node.className = 'chat-line chat-line-mod-action';
@@ -13,7 +14,9 @@ class PubsubTimeoutNode extends ElementNode {
     this.noticeNode.textContent = this.generateMessage();
   }
 
-  update() {
+  update(newData) {
+    this.oldData = this.data;
+    this.data = newData;
     this.noticeNode.textContent = this.generateMessage();
   }
 
@@ -30,9 +33,9 @@ class PubsubTimeoutNode extends ElementNode {
       text += ` second${this.data.args[1] != 1 ? 's' : ''}`;
     }
     text += '.';
-    if (this.data.args[2]) {
+    if (this.data.args[2] || this.oldData.args[2]) {
       text += ' Reason: ';
-      text += this.data.args[2];
+      text += this.data.args[2] || this.oldData.args[2];
     }
     if (this.times > 1) {
       text += ` (${this.times} times)`;

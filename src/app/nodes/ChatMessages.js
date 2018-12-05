@@ -189,9 +189,8 @@ class ChatMessages extends ElementNode {
     const pubsubKey = `${data.created_by_user_id}.${data.target_user_id}`;
     const [i, type, message] = this.findExistingModlog(pubsubKey);
     if (message) {
-      message.node.data = data;
       message.node.times++;
-      message.node.update();
+      message.node.update(data);
       if (type === 0) {
         this.collectedMessages[i] = message;
       } else if (type === 1) {

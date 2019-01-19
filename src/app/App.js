@@ -14,12 +14,11 @@ import FFZModule from './modules/FFZ';
 import SettingsModule from './modules/Settings';
 
 import TwitchAuthClient from './modules/TwitchAuthClient';
-import TwitchHelixClient from './modules/TwitchHelixClient';
+import helixClient from './modules/TwitchHelixClient';
 import TwitchConnection from './modules/TwitchConnection';
 import PubsubConnection from './modules/PubsubConnection';
 
 const authClient = new TwitchAuthClient();
-const helixClient = new TwitchHelixClient();
 
 class App {
   constructor() {
@@ -32,7 +31,6 @@ class App {
     this.userBadges = {};
     this.app = new AppNode(document.getElementById('app'));
     this.start = this.start.bind(this);
-    this.validateToken = this.validateToken.bind(this);
   }
 
   start() {
@@ -47,7 +45,8 @@ class App {
         }
       }
     }
-    if (!localStorage.oauthToken) {
+    const token = localStorage.oauthToken;
+    if (!token) {
       elements.loginOverlay.addClass('overlay-active');
       // elements.loginButton
       return;
@@ -60,40 +59,40 @@ class App {
     }
     SettingsModule.fetchSettings();
     this.app.setLoading(true);
-    helixClient.fetchChannelByLogin(channelName)
-      .then((channel) => {
-        this.validateToken(channelName, channel.id);
-      })
-      .catch(() => {
-        window.location = '/';
-      });
-  }
-
-  validateToken(channelName, channelID) {
-    const token = localStorage.oauthToken;
-    this.token = token;
     authClient.validateToken(token, (err, payload) => {
       if (err || !payload || !payload.user_id) {
         localStorage.removeItem('oauthToken');
         this.start();
         return;
       }
-      Promise.all([
-        BadgesModule.fetchGlobalBadges(),
-        BadgesModule.fetchChannelBadges(channelID),
-        EmotesModule.fetchGlobalTwitchEmotes(payload.user_id, token),
-        BTTVModule.fetchGlobalEmotes(),
-        BTTVModule.fetchChannelEmotes(channelName),
-        CheermotesModule.fetchCheermotes(channelID),
-        FFZModule.fetchGlobalEmotes(),
-        FFZModule.fetchChannelEmotes(channelID),
-      ]).then((res) => {
-        this.connect(payload.login, payload.user_id, token, channelName, channelID);
-        new ClickModule(token);
-      })
-      .catch((err) => {
-        console.error('error while loading badges', err);
-      })
+      helixClient.setToken(token);
+      helixClient.fetchChannelByLogin(channelName)
+        .then((channel) => {
+          this.bootstrapChannel(channel.login, channel.id, payload, token);
+        })
+        .catch((err) => {
+          console.error(err);
+          // window.location = '/';
+        });
+    });
+  }
+
+  bootstrapChannel(channelName, channelID, payload, token) {
+    Promise.all([
+      BadgesModule.fetchGlobalBadges(),
+      BadgesModule.fetchChannelBadges(channelID),
+      EmotesModule.fetchGlobalTwitchEmotes(payload.user_id, token),
+      BTTVModule.fetchGlobalEmotes(),
+      BTTVModule.fetchChannelEmotes(channelName),
+      CheermotesModule.fetchCheermotes(channelID),
+      FFZModule.fetchGlobalEmotes(),
+      FFZModule.fetchChannelEmotes(channelID),
+    ]).then((res) => {
+      this.connect(payload.login, payload.user_id, token, channelName, channelID);
+      new ClickModule(token);
+    })
+    .catch((err) => {
+      console.error('error while loading badges', err);
     });
   }
 

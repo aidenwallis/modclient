@@ -7,7 +7,7 @@ const settingsBaseTemplate = `
       ${settingsHeaderTemplate}
       <div class="settings-overlay-main">
         ${settingsSidebarTemplate}
-        <div id="settings-overlay-content" class="settings-overlay-content"></div>
+        <div id="settings-overlay-content" class="settings-overlay-content scrollbar"></div>
       </div>
     </div>
   </div>

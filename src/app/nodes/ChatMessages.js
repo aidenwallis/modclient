@@ -1,5 +1,6 @@
 import elements from '../elements';
 import ElementNode from '../modules/ElementNode';
+import PubsubDeleteNode from './PubsubDelete';
 import PubsubTimeoutNode from './PubsubTimeout';
 import SettingsModule from '../modules/Settings';
 import messageTemplate from '../templates/chat/message';
@@ -51,9 +52,12 @@ class ChatMessages extends ElementNode {
     for (let i = 0; i < this.collectedMessages.length; i++) {
       let message = this.collectedMessages[i];
       if (message.type === 'modaction') {
-        clearchats.push(message);
-      } else if (message.type === 'pubsub_timeout') {
+        clearchats.push(`[data-user-id="${message.data.tags['target-user-id']}"`);
+      } else if (message.type === 'pubsub_timeout' || message.type === 'pubsub_delete') {
         this.node.appendChild(message.node.node);
+        if (message.type === 'pubsub_delete') {
+          clearchats.push(`[data-msg-id="${message.node.data.args[2]}"]`);
+        }
       } else {
         this.node.appendChild(message.node);
       }
@@ -69,7 +73,7 @@ class ChatMessages extends ElementNode {
           }
         }
         for (let j = 0; j < clearchats.length; j++) {
-          const messages = this.node.querySelectorAll(`[data-user-id="${clearchats[j].data.tags['target-user-id']}"`);
+          const messages = this.node.querySelectorAll(clearchats[j]);
           for (let i = 0; i < messages.length; i++) {
             messages[i].classList.add('chat-line-deleted');
           }
@@ -98,6 +102,9 @@ class ChatMessages extends ElementNode {
   spawnChatStatus() {
     if (!elements.footer) {
       return;
+    }
+    if (this.statusNode) {
+      this.removeStatusNode();
     }
     const hoverNode = document.createElement('div');
     hoverNode.className = 'chat-status';
@@ -130,7 +137,6 @@ class ChatMessages extends ElementNode {
   scroll(e) {
     window.requestAnimationFrame(() => {
       const scrolledBottom = e.target.scrollTop >= (e.target.scrollHeight - e.target.offsetHeight) - 100;
-      // const scrolledBottom = e.target.scrollTop === (e.target.scrollHeight - e.target.offsetHeight);
       if (!scrolledBottom) {
         this.scrollPause = true;
         if (this.hoverPause) {
@@ -179,10 +185,19 @@ class ChatMessages extends ElementNode {
         return this.handlePubsubTimeout(message, channel, channelID);
       case 'automod_rejected':
         return this.handleAutomod(message, channel, channelID);
+      case 'delete':
+        return this.handlePubsubDelete(message, channel, channelID);
       default:
         this.handlePubsubCommand(message, channel, channelID);
         break;
     }
+  }
+
+  handlePubsubDelete(data) {
+    this.collectedMessages.push({
+      type: 'pubsub_delete',
+      node: new PubsubDeleteNode(data),
+    });
   }
 
   handlePubsubTimeout(data) {
@@ -234,6 +249,9 @@ class ChatMessages extends ElementNode {
     const line = document.createElement('div');
     line.className = 'chat-line';
     line.innerHTML = node;
+    if (message.tags && message.tags.id) {
+      line.dataset.msgId = message.tags.id;
+    }
     if (message.tags && message.tags['user-id']) {
       line.dataset.userId = message.tags['user-id'];
     }

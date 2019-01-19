@@ -3,8 +3,16 @@ const typesMap = {
   1: 'Open URL',
 };
 
-const settingModLineLabelTemplate = (item) => `
+const settingModLineLabelTextTemplate = (item) => `
+  <input type="text" class="setting-mod-line-icon-label-input input input-thin" value="${item.textLabel}">
+`;
 
+const settingModLineLabelIconTemplate = (item) => `
+  <div class="setting-mod-line-icon-icon-container">
+    <button class="setting-mod-line-icon-icon-preview setting-mod-line-icon-label-input input">
+      <i class="fa fa-${item.iconLabel}"></i>
+    </button>
+  </div>
 `;
 
 const settingModLineIconTemplate = (item, i) => `
@@ -19,9 +27,9 @@ const settingModLineIconTemplate = (item, i) => `
       <i class="fa fa-arrow-down"></i>
     </button>
   </div>
-  <div class="setting-mod-line-icon-type flex-1 setting-mod-line-icon-column">
+  <div class="setting-mod-line-icon-type setting-mod-line-icon-column">
     <select class="setting-mod-line-icon-type input input-block">
-      <option value="0"${item.type == 0 ? ' selected' : ''}>Chat Command</option>
+      <option value="0"${item.type == 0 ? ' selected' : ''}>Command</option>
       <option value="1"${item.type == 1 ? ' selected' : ''}>Open URL</option>
     </select>
   </div>
@@ -35,7 +43,7 @@ const settingModLineIconTemplate = (item, i) => `
     </select>
   </div>
   <div class="setting-mod-line-icon-label setting-mod-line-icon-column">
-    <input type="text" class="setting-mod-line-icon-label-input input input-thin" value="${item.labelType == 0 ? item.iconLabel : item.textLabel}">
+    ${item.labelType == 0 ? settingModLineLabelIconTemplate(item)  : settingModLineLabelTextTemplate(item)}
   </div>
 `;
 

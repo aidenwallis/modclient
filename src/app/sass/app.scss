@@ -40,6 +40,20 @@ p {
   flex: 1;
 }
 
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $twitch;
+  }
+}
+
 @import 'overlays';
 @import 'panels';
 @import 'form';
@@ -47,3 +61,4 @@ p {
 @import 'loader';
 @import 'chat';
 @import 'settings';
+@import 'iconselect';

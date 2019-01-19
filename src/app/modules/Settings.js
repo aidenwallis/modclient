@@ -80,7 +80,3 @@ class SettingsModule {
 }
 
 export default new SettingsModule();
-
-function removeElement(node) {
-  node.parentNode.removeChild(node);
-}

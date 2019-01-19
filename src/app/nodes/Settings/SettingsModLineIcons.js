@@ -1,10 +1,10 @@
 import ElementNode from '../../modules/ElementNode';
 import EventHub from '../../modules/EventHub';
 import SettingsModule from '../../modules/Settings';
-import settingsModLineIconTemplate from '../../templates/settings/modLineIcon';
 import settingsModLineIconsTemplate from '../../templates/settings/modLineIcons';
 import settingModLineIconTemplate from '../../templates/settings/modLineIcon';
-import iconSelector from '../../templates/settings/iconSelector';
+
+import faIcons from '../../icons.json';
 
 const defaultNodes = {
   createButton: null,
@@ -16,6 +16,9 @@ class SettingsModLineIconsNode extends ElementNode {
     this.settings = SettingsModule.fetchSettings();
     this.nodes = defaultNodes;
     this.settingAction = this.settingAction.bind(this);
+    this.portalNode = document.getElementById('portal');
+    this.settingsContent = document.getElementById('settings-overlay-content');
+    this.currentSelector = null;
   }
 
   render() {
@@ -74,28 +77,67 @@ class SettingsModLineIconsNode extends ElementNode {
     node.querySelector('.setting-mod-line-icon-type').onchange = e => this.changeModIconType(e, index);
     node.querySelector('.setting-mod-line-icon-input').onblur = e => this.changeModIconQuery(e, index);
     node.querySelector('.setting-mod-line-icon-labeltype').onchange = e => this.changeModIconLabeltype(e, index, node);
-    if (item.type === 1) {
+    if (item.labelType.toString() === '1') {
       node.querySelector('.setting-mod-line-icon-label-input').onblur = e => this.changeModIconLabel(e, index, item);
+    }
+    if (item.labelType.toString() === '0') {
+      node.querySelector('button.setting-mod-line-icon-icon-preview').onclick = e => this.openModIconSelector(e, index, item);
     }
     node.querySelector('.setting-mod-line-icon-up').onclick = e => this.moveModIcon(e, index, -1);
     node.querySelector('.setting-mod-line-icon-down').onclick = e => this.moveModIcon(e, index, 1);
     node.querySelector('.setting-mod-line-icon-delete').onclick = e => this.deleteModIcon(index);
-    if (item.type == 0) {
-      node.querySelector('button.setting-mod-line-icon-icon-preview').onclick = e => this.openModIconSelector(e, index, item);
-    }
   }
 
   openModIconSelector(e, index, item) {
-    const parentNode = e.target.parentNode;
-    if (parentNode.classList.contains('icon-selector-open')) {
-      return;
+    if (this.currentSelector) {
+      this.portalNode.removeChild(this.currentSelector);
     }
-    parentNode.classList.add('icon-selector-open');
+    const {parentNode} = e.currentTarget;
 
     const selectorNode = document.createElement('div');
-    selector.className = 'setting-mod-line-icon-selector-container';
-    selectorNode.innerHTML = iconSelectorTemplate(item.iconLabel);
-    parentNode.appendChild(selectorNode);
+    selectorNode.style.left = `${parentNode.offsetLeft}px`;
+    selectorNode.style.top = `${parentNode.offsetTop}px`;
+    selectorNode.className = 'setting-mod-line-icon-selector-container icon-selector';
+    selectorNode.onclick = e => e.stopPropagation();
+
+    const iconNode = document.createElement('i');
+    iconNode.className = 'fa fa-caret-up icon-selector-uptick';
+    selectorNode.appendChild(iconNode);
+
+    const iconsNode = document.createElement('div');
+    iconsNode.className = 'icon-selector-icons scrollbar';
+    for (let i = 0; i < faIcons.length; i++) {
+      const icon = faIcons[i];
+      const buttonElement = document.createElement('button');
+      const iconElement = document.createElement('i');
+      iconElement.className = `fa fa-fw fa-${icon}`;
+      buttonElement.className = 'icon-selector-icon';
+      buttonElement.title = icon;
+      if (item.iconLabel === icon) {
+        buttonElement.classList.add('icon-selector-icon-active');
+      }
+      buttonElement.onclick = e => this.selectNewIcon(e, index, item, icon);
+      buttonElement.appendChild(iconElement);
+      iconsNode.appendChild(buttonElement);
+    }
+
+    selectorNode.appendChild(iconsNode);
+
+    this.currentSelector = selectorNode;
+    this.settingsContent.style.overflowY = 'hidden';
+    this.portalNode.appendChild(selectorNode);
+  }
+
+  selectNewIcon(e, index, item, icon) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.currentSelector) {
+      this.portalNode.removeChild(this.currentSelector);
+      this.currentSelector = null;
+    }
+    this.settings.modLineIcons[index].iconLabel = icon;
+    SettingsModule.updateSettings(this.settings);
+    this.populateContent();
   }
 
   moveModIcon(e, index, amount) {

@@ -56,7 +56,6 @@ class ChatMessages extends ElementNode {
       } else if (message.type === 'pubsub_timeout' || message.type === 'pubsub_delete') {
         this.node.appendChild(message.node.node);
         if (message.type === 'pubsub_delete') {
-          console.log(message.node.data);
           clearchats.push(`[data-msg-id="${message.node.data.args[2]}"]`);
         }
       } else {

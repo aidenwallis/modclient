@@ -29,7 +29,7 @@ const settingModLineIconTemplate = (item, i) => `
   </div>
   <div class="setting-mod-line-icon-type setting-mod-line-icon-column">
     <select class="setting-mod-line-icon-type input input-block">
-      <option value="0"${item.type == 0 ? ' selected' : ''}>Chat Command</option>
+      <option value="0"${item.type == 0 ? ' selected' : ''}>Command</option>
       <option value="1"${item.type == 1 ? ' selected' : ''}>Open URL</option>
     </select>
   </div>

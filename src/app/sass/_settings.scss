@@ -114,4 +114,21 @@
   &-column {
     padding-left: 15px;
   }
+  select.setting-mod-line-icon-type {
+    max-width: 139px;
+  }
+}
+
+.setting-mod-line-icon-icon-container {
+  position: relative;
+}
+
+.setting-mod-line-icon-icon-preview {
+  padding-left: 5px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+.setting-mod-line-icon-icon-selector {
+
 }

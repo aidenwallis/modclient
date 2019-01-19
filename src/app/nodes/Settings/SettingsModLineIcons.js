@@ -4,6 +4,7 @@ import SettingsModule from '../../modules/Settings';
 import settingsModLineIconTemplate from '../../templates/settings/modLineIcon';
 import settingsModLineIconsTemplate from '../../templates/settings/modLineIcons';
 import settingModLineIconTemplate from '../../templates/settings/modLineIcon';
+import iconSelector from '../../templates/settings/iconSelector';
 
 const defaultNodes = {
   createButton: null,
@@ -65,18 +66,36 @@ class SettingsModLineIconsNode extends ElementNode {
     node.dataset.index = index;
     node.id = `setting-mod-line-icon-${index}`;
     node.innerHTML = settingModLineIconTemplate(item);
-    this.mountNodeEvents(node, index);
+    this.mountNodeEvents(node, index, item);
     return node;
   }
 
-  mountNodeEvents(node, index) {
+  mountNodeEvents(node, index, item) {
     node.querySelector('.setting-mod-line-icon-type').onchange = e => this.changeModIconType(e, index);
     node.querySelector('.setting-mod-line-icon-input').onblur = e => this.changeModIconQuery(e, index);
     node.querySelector('.setting-mod-line-icon-labeltype').onchange = e => this.changeModIconLabeltype(e, index, node);
-    node.querySelector('.setting-mod-line-icon-label-input').onblur = e => this.changeModIconLabel(e, index, this.settings.modLineIcons[index]);
+    if (item.type === 1) {
+      node.querySelector('.setting-mod-line-icon-label-input').onblur = e => this.changeModIconLabel(e, index, item);
+    }
     node.querySelector('.setting-mod-line-icon-up').onclick = e => this.moveModIcon(e, index, -1);
     node.querySelector('.setting-mod-line-icon-down').onclick = e => this.moveModIcon(e, index, 1);
     node.querySelector('.setting-mod-line-icon-delete').onclick = e => this.deleteModIcon(index);
+    if (item.type == 0) {
+      node.querySelector('button.setting-mod-line-icon-icon-preview').onclick = e => this.openModIconSelector(e, index, item);
+    }
+  }
+
+  openModIconSelector(e, index, item) {
+    const parentNode = e.target.parentNode;
+    if (parentNode.classList.contains('icon-selector-open')) {
+      return;
+    }
+    parentNode.classList.add('icon-selector-open');
+
+    const selectorNode = document.createElement('div');
+    selector.className = 'setting-mod-line-icon-selector-container';
+    selectorNode.innerHTML = iconSelectorTemplate(item.iconLabel);
+    parentNode.appendChild(selectorNode);
   }
 
   moveModIcon(e, index, amount) {
@@ -99,7 +118,6 @@ class SettingsModLineIconsNode extends ElementNode {
   }
 
   changeModIconLabeltype(e, index, node) {
-    console.log(e, index, node);
     this.settings.modLineIcons[index].labelType = e.target.value;
     SettingsModule.updateSettings(this.settings);
     node.innerHTML = settingModLineIconTemplate(this.settings.modLineIcons[index]);

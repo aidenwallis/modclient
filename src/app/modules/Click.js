@@ -11,7 +11,6 @@ class ClickModule {
 
   bindToDocument() {
     document.addEventListener('click', (e) => {
-      console.log(e.target.className);
       if (e.target.className === 'chat-line-name-inner') {
         this.handleNameClick(e);
         return;

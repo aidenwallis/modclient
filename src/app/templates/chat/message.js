@@ -36,7 +36,6 @@ function renderWord(message, word) {
   return escape(word);
 }
 
-// this emote formatting i found by alca, props to him!
 function renderText(message, emotes, action) {
   const characterArray = (action ? action[1] : message.trailing).split('');
   for (let i = 0; i < emotes.length; i++) {

@@ -146,6 +146,13 @@
   color: $grey;
   font-size: 12px;
   line-height: 20px;
+  .chat-line-revealer:not(.chat-line-revealed) {
+    color: lighten($grey, 28);
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .chat-line-text {

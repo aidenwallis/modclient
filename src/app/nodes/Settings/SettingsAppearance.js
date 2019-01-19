@@ -40,7 +40,6 @@ class SettingsAppearanceNode extends ElementNode {
     e.preventDefault();
     const inputs = discoverInputs(this.nodes.form.node);
     this.settings.appearance = inputs;
-    console.log(inputs);
     SettingsModule.updateSettings(this.settings);
   }
 }

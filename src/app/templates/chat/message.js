@@ -8,8 +8,10 @@ import badgeTemplate from './badge';
 import BadgesModule from '../../modules/Badges';
 import BTTVModule from '../../modules/BTTV';
 import CheermotesModule from '../../modules/Cheermotes';
+import SettingsModule from '../../modules/Settings';
 import FFZModule from '../../modules/FFZ';
 import transformBadges from '../../util/transformBadges';
+import colorFix from '../../util/colorFix';
 
 const defaultColors = ['#e391b8', '#e091ce', '#da91de', '#c291db', '#ab91d9', '#9691d6', '#91a0d4', '#91b2d1', '#91c2cf', '#91ccc7', '#91c9b4', '#90c7a2', '#90c492', '#9dc290', '#aabf8f', '#b5bd8f', '#bab58f', '#b8a68e', '#b5998e', '#b38d8d'];
 const intlNameTemplate = (name) => `<span class="chat-line-name-intl-login"> (${name})</span>`;
@@ -112,6 +114,9 @@ function messageTemplate(message, userBadges) {
   if (!color || color === '') {
     color = defaultColors[sdbmCode(message.tags['user-id'] || escapedUsername) % (defaultColors.length)];
   }
+  if (SettingsModule.settings.appearance.fixNameColor !== false) {
+    color = colorFix(color);
+  }
   const escapedDisplayName = escape(message.tags['display-name']);
   const intlName = escapedDisplayName.toLowerCase() !== escapedUsername;
   const action = regexes.action.exec(message.trailing);
@@ -133,4 +138,3 @@ function messageTemplate(message, userBadges) {
 }
 
 export default messageTemplate;
-// channel, username, msgId, userId, displayName

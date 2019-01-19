@@ -11,6 +11,9 @@ const regexes = {
   displayName: /{displayName}/g,
   prefixCheck: /^(?:[a-zA-Z]+:)?\/\//,
   bitMatch: /^(\w+?)(\d+)$/,
+  color: /^#[A-F0-9]+$/i,
+  colorGlobal: /^#[A-F0-9]+$/gi,
+  notColorGlobal: /[^A-F0-9]/gi,
 };
 
 export default regexes;

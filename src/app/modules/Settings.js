@@ -9,6 +9,7 @@ const defaultSettings = {
   appearance: {
     css: null,
     chatLines: false,
+    fixNameColor: true,
   },
   modLineIcons: [{
     type: 0,
@@ -25,7 +26,7 @@ const defaultSettings = {
 
 class SettingsModule {
   constructor() {
-    this.settings = defaultSettings;
+    this.settings = this.fetchSettings();
     this.fetchSettings = this.fetchSettings.bind(this);
     this.customCSSNode = null;
   }

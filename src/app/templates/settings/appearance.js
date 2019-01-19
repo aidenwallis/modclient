@@ -13,6 +13,11 @@ const settingsApparancePage = (settings) => `
           <input type="checkbox" name="chatLines" value="1"${settings.appearance.chatLines ? ' checked' : ''}> Add lines in between chat messages.
         </label>
       </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="chatLines" value="1"${settings.appearance.fixNameColor !== false ? ' checked' : ''}> Try to make sure name colors are always readable.
+        </label>
+      </div>
       <button class="button" type="submit">Save</button>
     </form>
   </div>

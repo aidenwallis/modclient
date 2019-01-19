@@ -134,6 +134,7 @@ class SettingsModLineIconsNode extends ElementNode {
     if (this.currentSelector) {
       this.portalNode.removeChild(this.currentSelector);
       this.currentSelector = null;
+      this.settingsContent.style.overflowY = null;
     }
     this.settings.modLineIcons[index].iconLabel = icon;
     SettingsModule.updateSettings(this.settings);

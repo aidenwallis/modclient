@@ -28,6 +28,22 @@ class ClickModule {
         return;
       }
     });
+    document.addEventListener('contextmenu', (e) => {
+      console.log(e.target);
+      if (e.target.className === 'chat-line-name-inner') {
+        this.handleNameRightClick(e);
+        return;
+      }
+    });
+  }
+
+  handleNameRightClick(e) {
+    e.preventDefault();
+    const chatFormNode = app.app.nodes.chatForm;
+    if (!chatFormNode) {
+      return;
+    }
+    chatFormNode.input.node.value += `@${e.target.dataset.displayName}, `;
   }
 
   handleNameClick(e) {
@@ -51,7 +67,6 @@ class ClickModule {
       .replace(regexes.userId, userId)
       .replace(regexes.displayName, displayName);
     if (type == 0) {
-      console.log(arg);
       app.sendMessage(arg);
     } else if (type == 1) {
       window.open(arg);

@@ -131,7 +131,12 @@ function messageTemplate(message, userBadges) {
     ${showIcons ? chatIconsTemplate(message.param.substring(1), escapedUsername, message.tags.id, message.tags['user-id'], escapedDisplayName) : ''}
     <span class="chat-line-badges">${badges}</span>
     <span class="chat-line-name">
-      <span class="chat-line-name-inner" data-username="${escapedUsername}" style="color: ${color}">${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span>${action ? '' : '<span class="chat-line-colon">:</span>'}
+      <span
+        class="chat-line-name-inner"
+        data-username="${escapedUsername}"
+        data-display-name="${escapedDisplayName}"
+        style="color: ${color}"
+      >${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span>${action ? '' : '<span class="chat-line-colon">:</span>'}
     </span>
     <span class="chat-line-text${action ? ' chat-line-text-action' : ''}"${action ? `style="color: ${color}"` : ''}>${renderText(message, emotes, action)}</span>
   `;

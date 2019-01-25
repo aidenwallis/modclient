@@ -37,7 +37,7 @@ function renderWord(message, word) {
 }
 
 function renderText(message, emotes, action) {
-  const characterArray = (action ? action[1] : message.trailing).split('');
+  const characterArray = Array.from(action ? action[1] : message.trailing);
   for (let i = 0; i < emotes.length; i++) {
     const emote = emotes[i];
     const emoteName = characterArray.slice(emote.start, emote.end + 1).join('');

@@ -33,13 +33,14 @@ class AppNode extends ElementNode {
 
   startChannel(channelName) {
     this.node.innerHTML = mainTemplate(channelName);
-    this.registerChatNodes();
+    this.registerChatNodes(channelName);
   }
 
-  registerChatNodes() {
+  registerChatNodes(channelName) {
+    console.log(channelName);
     this.nodes = {
       roomstate: new RoomstateNode(document.getElementById('chat-roomstate')),
-      chatForm: new ChatFormNode(document.getElementById('chat-form')),
+      chatForm: new ChatFormNode(document.getElementById('chat-form'), channelName),
       messages: new ChatMessagesNode(document.getElementById('chat-messages')),
       footer: new ElementNode(document.getElementById('chat-footer')),
       settings: new SettingsButtonNode(document.getElementById('settings-button')),

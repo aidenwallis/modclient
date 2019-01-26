@@ -29,7 +29,6 @@ class ClickModule {
       }
     });
     document.addEventListener('contextmenu', (e) => {
-      console.log(e.target);
       if (e.target.className === 'chat-line-name-inner') {
         this.handleNameRightClick(e);
         return;

@@ -52,7 +52,6 @@ function renderText(message, emotes, action) {
       characterArray[k] = '';
     }
   }
-  characterArray = punycode.ucs2.encode(characterArray);
   let word = '';
   let final = '';
   for (let i = 0; i < characterArray.length; i++) {

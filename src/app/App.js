@@ -75,8 +75,7 @@ class App {
           this.bootstrapChannel(channel.login, channel.id, payload, token);
         })
         .catch((err) => {
-          console.error(err);
-          // window.location = '/';
+          window.location = '/';
         });
     });
   }

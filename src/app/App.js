@@ -1,4 +1,5 @@
 import assign from 'lodash/assign';
+import EmojiConverter from 'emoji-js';
 
 import elements from './elements';
 import regexes from './regexes';
@@ -31,6 +32,7 @@ class App {
     this.userBadges = {};
     this.app = new AppNode(document.getElementById('app'));
     this.start = this.start.bind(this);
+    this.emojiConverter = new EmojiConverter();
   }
 
   start() {
@@ -170,7 +172,7 @@ class App {
     if (!this.sendConnection) {
       throw new Error('Tried to send a message with no live connection to Twitch!');
     }
-    this.sendConnection.send(`PRIVMSG #${this.receiverConnection.channel} :${message}`);
+    this.sendConnection.send(`PRIVMSG #${this.receiverConnection.channel} :${this.emojiConverter.replace_colons(message)}`);
   }
 }
 

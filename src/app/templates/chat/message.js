@@ -1,5 +1,6 @@
 import escape from 'lodash/escape';
 import findLast from 'lodash/findLast';
+import punycode from 'punycode';
 import linkifyHtml from 'linkifyjs/html';
 import regexes from '../../regexes';
 import chatIconsTemplate from './icons';
@@ -37,7 +38,7 @@ function renderWord(message, word) {
 }
 
 function renderText(message, emotes, action) {
-  const characterArray = Array.from(action ? action[1] : message.trailing);
+  const characterArray = punycode.ucs2.decode(action ? action[1] : message.trailing);
   for (let i = 0; i < emotes.length; i++) {
     const emote = emotes[i];
     const emoteName = characterArray.slice(emote.start, emote.end + 1).join('');

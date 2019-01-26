@@ -40,7 +40,7 @@ function renderWord(message, word) {
 }
 
 function renderText(message, emotes, action) {
-  const characterArray = punycode.ucs2.decode(action ? action[1] : message.trailing);
+  let characterArray = punycode.ucs2.decode(action ? action[1] : message.trailing);
   for (let i = 0; i < characterArray.length; i++) {
     characterArray[i] = punycode.ucs2.encode([characterArray[i]]);
   }
@@ -52,6 +52,7 @@ function renderText(message, emotes, action) {
       characterArray[k] = '';
     }
   }
+  characterArray = punycode.ucs2.encode(characterArray);
   let word = '';
   let final = '';
   for (let i = 0; i < characterArray.length; i++) {

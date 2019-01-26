@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "emoji-js": "^3.4.1",
     "eventemitter3": "^3.1.0",
     "linkifyjs": "^2.1.6",
     "lodash": "^4.17.10",

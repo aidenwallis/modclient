@@ -33,6 +33,8 @@ class App {
     this.app = new AppNode(document.getElementById('app'));
     this.start = this.start.bind(this);
     this.emojiConverter = new EmojiConverter();
+    this.emojiConverter.init_env(); // else auto-detection will trigger when we first convert
+    this.emojiConverter.replace_mode = 'unified';
   }
 
   start() {

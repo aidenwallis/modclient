@@ -64,7 +64,7 @@ function renderText(message, emotes, action) {
     }
   }
   final += renderWord(message, word);
-  return linkifyHtml(final);
+  return twemoji.parse(linkifyHtml(final));
 }
 
 function messageTemplate(message, userBadges) {

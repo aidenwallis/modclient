@@ -174,9 +174,13 @@
   }
 }
 
-.chat-line-emote {
+.chat-line-emote, .emoji {
   margin: -.5rem 0;
   vertical-align: middle;
+}
+
+.emoji {
+  height: 20px;
 }
 
 .chat-line-badge-moderator {
@@ -255,69 +259,3 @@
     color: lighten($line-color, 1) !important;
   }
 }
-
-// ommand
-// :
-// "USERNOTICE"
-// param
-// :
-// "#timthetatman"
-// prefix
-// :
-// "tmi.twitch.tv"
-// tags
-// :
-// badges
-// :
-// "subscriber/0,premium/1"
-// color
-// :
-// "#FF0000"
-// display-name
-// :
-// "sirscrachy"
-// emotes
-// :
-// ""
-// id
-// :
-// "505dd0c2-da8f-44ac-95be-31f2fdae2de8"
-// login
-// :
-// "sirscrachy"
-// mod
-// :
-// "0"
-// msg-id
-// :
-// "sub"
-// msg-param-months
-// :
-// "1"
-// msg-param-sub-plan
-// :
-// "Prime"
-// msg-param-sub-plan-name
-// :
-// "Channel Subscription (TimTheTatMan)"
-// room-id
-// :
-// "36769016"
-// subscriber
-// :
-// "1"
-// system-msg
-// :
-// "sirscrachy just subscribed with Twitch Prime!"
-// tmi-sent-ts
-// :
-// "1535389521645"
-// turbo
-// :
-// "0"
-// user-id
-// :
-// "150283574"
-// user-type
-// :
-// ""

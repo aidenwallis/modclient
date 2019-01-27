@@ -15,7 +15,7 @@ const settingsApparancePage = (settings) => `
       </div>
       <div class="form-group">
         <label>
-          <input type="checkbox" name="chatLines" value="1"${settings.appearance.fixNameColor !== false ? ' checked' : ''}> Try to make sure name colors are always readable.
+          <input type="checkbox" name="fixNameColor" value="1"${settings.appearance.fixNameColor !== false ? ' checked' : ''}> Try to make sure name colors are always readable.
         </label>
       </div>
       <button class="button" type="submit">Save</button>

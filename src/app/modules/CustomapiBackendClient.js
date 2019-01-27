@@ -2,7 +2,7 @@ import makeApiClient from '../util/makeApiClient';
 
 class CustomapiBackendClient {
     constructor() {
-        this.client = makeApiClient('https://api.customapi.aidenwallis.co.uk');
+        this.client = makeApiClient('https://modclient-api.aidenwallis.co.uk');
     }
 
     fetchChatters(channelName) {

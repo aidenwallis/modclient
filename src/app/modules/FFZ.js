@@ -6,6 +6,7 @@ class FFZModule {
   constructor() {
     this.globalEmotes = {};
     this.channelEmotes = {};
+    this.emotes = [];
   }
 
   fetchGlobalEmotes() {
@@ -22,7 +23,8 @@ class FFZModule {
                 url: emote.urls[Math.min(...keys(emote.urls))],
                 provider: 'ffz',
                 type: 'global',
-              }
+              };
+              this.emotes.push(emote.name);
             }
           }
         }
@@ -46,6 +48,7 @@ class FFZModule {
               provider: 'ffz',
               type: 'channel',
             };
+            this.emotes.push(cur.name);
             return acc;
           }, {});
         }

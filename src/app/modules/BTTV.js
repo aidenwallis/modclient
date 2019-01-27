@@ -4,6 +4,7 @@ class BTTVModule {
   constructor() {
     this.globalEmotes = {};
     this.channelEmotes = {};
+    this.emotes = [];
   }
 
   fetchGlobalEmotes() {
@@ -17,6 +18,7 @@ class BTTVModule {
             provider: 'bttv',
             type: 'global',
           };
+          this.emotes.push(cur.code);
           return acc;
         }, {});
         return true;
@@ -35,6 +37,7 @@ class BTTVModule {
             provider: 'bttv',
             type: 'global',
           };
+          this.emotes.push(cur.code);
           return acc;
         }, {});
         return true;

@@ -7,6 +7,7 @@ import messageTemplate from '../templates/chat/message';
 import noticeTemplate from '../templates/chat/notice';
 import automodTemplate from '../templates/chat/automod';
 import usernoticeTemplate from '../templates/chat/usernotice';
+import EventHub from '../modules/EventHub';
 
 class ChatMessages extends ElementNode {
   constructor(node) {
@@ -18,6 +19,10 @@ class ChatMessages extends ElementNode {
     this.scrollPause = false;
     this.node.onmouseover = () => this.hoverOver();
     this.node.onmouseout = () => this.hoverOut();
+    this.ignoreHover = false;
+    EventHub.instance.on('lock.hover', (ignoreHover) => {
+      this.ignoreHover = ignoreHover;
+    });
     this.node.onscroll = e => this.scroll(e);
     this.statusNode = null;
     setInterval(() => this.updateMessages(), 100);
@@ -84,6 +89,9 @@ class ChatMessages extends ElementNode {
   }
 
   hoverOver() {
+    if (this.ignoreHover) {
+      return;
+    }
     if (SettingsModule.settings.chat.pause.mode === 1) {
       this.hoverPause = true;
       if (!this.statusNode) {
@@ -93,6 +101,9 @@ class ChatMessages extends ElementNode {
   }
 
   hoverOut() {
+    if (this.ignoreHover) {
+      return;
+    }
     if (SettingsModule.settings.chat.pause.mode === 1) {
       this.hoverPause = false;
     }

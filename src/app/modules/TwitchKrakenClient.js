@@ -3,10 +3,15 @@ const client = makeApiClient('https://api.twitch.tv/kraken/', { Accept: 'applica
 class TwitchKrakenClient {
   static resolveAutomod(action, msgID, token) {
     return client.post(`chat/automod/${action}`, { msg_id: msgID }, {
-      headers: { 'Authorization': `OAuth ${token}` },
+      headers: {'Authorization': `OAuth ${token}` },
     })
     .then((res) => res.data)
     .catch((err) => console.error('failed to resolve automod msg', err));
+  }
+
+  static fetchChannelByID(id) {
+    return client.get(`channels/${id}`)
+      .then((res) => res.data);
   }
 
   static fetchGlobalCheermotes() {

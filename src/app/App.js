@@ -18,6 +18,8 @@ import TwitchAuthClient from './modules/TwitchAuthClient';
 import helixClient from './modules/TwitchHelixClient';
 import TwitchConnection from './modules/TwitchConnection';
 import PubsubConnection from './modules/PubsubConnection';
+import ModCard from './nodes/ModCard';
+import EventHub from './modules/EventHub';
 
 const authClient = new TwitchAuthClient();
 
@@ -35,6 +37,8 @@ class App {
     this.emojiConverter = new EmojiConverter();
     this.emojiConverter.init_env(); // else auto-detection will trigger when we first convert
     this.emojiConverter.replace_mode = 'unified';
+    this.modCards = {};
+    this.messages = {};
   }
 
   start() {
@@ -155,9 +159,29 @@ class App {
     return this.pubsubConnection.connect();
   }
 
+  cacheMessage(message) {
+    const userID = message.tags['user-id'].toString();
+    if (!this.messages[userID]) {
+      this.messages[userID] = [];
+    }
+    const date = new Date();
+    const actionMatch = regexes.action.exec(message.trailing);
+    const content = actionMatch ? actionMatch[1] : message.trailing;
+    const msg = `${('00' + date.getHours()).substr(2)}:${date.getMinutes()}: ${content}`;
+    EventHub.instance.emit(`messages.new-cache.${userID}`, msg);
+    this.messages[userID].push(msg);
+  }
+
+  getMessages(userID) {
+    return this.messages[userID.toString()] || [];
+  }
+
   handleMessage(message) {
     if (!this.app.nodes.messages) {
       return;
+    }
+    if (message.tags && message.tags['user-id']) {
+      this.cacheMessage(message);
     }
     this.app.nodes.messages.receiveMessage(message, this.userBadges);
   }
@@ -169,9 +193,40 @@ class App {
     this.app.nodes.messages.receiveUsernotice(message, this.userBadges);
   }
 
+  handleModCard(split) {
+    const target = split[1].toLowerCase();
+    if (this.modCards[target]) {
+      return;
+    }
+    const card = new ModCard(target, this.receiverConnection.channel);
+    if (!target) {
+      return;
+    }
+    card.render();
+    this.modCards[target] = card;
+  }
+
+  openModCard(username, userID) {
+    if (this.modCards[username]) {
+      return;
+    }
+    const card = new ModCard(username, this.receiverConnection.channel);
+    card.renderWithID(userID);
+    this.modCards[username] = card;
+  }
+
+  removeModCard(target) {
+    delete this.modCards[target];
+  }
+
   sendMessage(message) {
     if (!this.sendConnection) {
       throw new Error('Tried to send a message with no live connection to Twitch!');
+    }
+    const messageSplit = message.toLowerCase().split(' ').filter(i => i);
+    if (messageSplit[0] === '/card' && messageSplit[1]) {
+      this.handleModCard(messageSplit);
+      return;
     }
     this.sendConnection.send(`PRIVMSG #${this.receiverConnection.channel} :${this.emojiConverter.replace_colons(message)}`);
   }

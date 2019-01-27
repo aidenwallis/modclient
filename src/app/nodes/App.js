@@ -37,7 +37,6 @@ class AppNode extends ElementNode {
   }
 
   registerChatNodes(channelName) {
-    console.log(channelName);
     this.nodes = {
       roomstate: new RoomstateNode(document.getElementById('chat-roomstate')),
       chatForm: new ChatFormNode(document.getElementById('chat-form'), channelName),

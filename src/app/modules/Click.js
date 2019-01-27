@@ -46,7 +46,8 @@ class ClickModule {
   }
 
   handleNameClick(e) {
-    console.log(e.target.dataset.username);
+    app.openModCard(e.target.dataset.username, e.target.dataset.userId);
+    // console.log(e.target.dataset.username);
   }
 
   handleAutomodResponse(e) {

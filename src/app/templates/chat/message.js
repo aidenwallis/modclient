@@ -139,6 +139,7 @@ function messageTemplate(message, userBadges) {
         class="chat-line-name-inner"
         data-username="${escapedUsername}"
         data-display-name="${escapedDisplayName}"
+        data-user-id="${message.tags['user-id']}"
         style="color: ${color}"
       >${escapedDisplayName}${intlName ? intlNameTemplate(escapedUsername) : ''}</span>${action ? '' : '<span class="chat-line-colon">:</span>'}
     </span>

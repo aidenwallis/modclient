@@ -183,6 +183,7 @@ class App {
     if (message.tags && message.tags['user-id']) {
       this.cacheMessage(message);
     }
+    EventHub.instance.emit('message.new', message);
     this.app.nodes.messages.receiveMessage(message, this.userBadges);
   }
 

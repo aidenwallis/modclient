@@ -70,8 +70,8 @@ class ChatMessages extends ElementNode {
       if (i === this.collectedMessages.length - 1) {
         this.collectedMessages = [];
         const childLength = this.node.children.length;
-        if (childLength > 300) {
-          const toRemove = childLength - 300;
+        if (childLength > 200) {
+          const toRemove = childLength - 200;
           for (let j = 0; j < toRemove; j++) {
             this.node.removeChild(this.node.childNodes[0]);
             this.currentMessages.shift();

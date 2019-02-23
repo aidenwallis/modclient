@@ -74,7 +74,7 @@ class ChatMessages extends ElementNode {
 
   calculateScrollback() {
     const MIN_MSG_HEIGHT = 30;
-    this.scrollbackLength = Math.round(Math.ceil(this.node.offsetHeight / MIN_MSG_HEIGHT) * 1.5);
+    this.scrollbackLength = Math.round(Math.ceil(this.node.offsetHeight / MIN_MSG_HEIGHT) * 2.5);
   }
 
   parseMessage(message, isMod = false) {

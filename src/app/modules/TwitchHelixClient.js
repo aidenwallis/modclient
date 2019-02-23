@@ -21,6 +21,11 @@ class TwitchHelixClient {
     return { Authorization: `Bearer ${this.token}` };
   }
 
+  fetchUser() {
+    return this.client.get('users', this.getOptions())
+      .then((res) => res.data && res.data.data ? res.data.data[0] : null);
+  }
+
   fetchChannelByLogin(login) {
     return this.client.get(`users?login=${login}`, this.getOptions())
       .then((res) => res.data && res.data.data ? res.data.data[0] : null);

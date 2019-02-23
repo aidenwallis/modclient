@@ -14,6 +14,7 @@ const regexes = {
   color: /^#[A-F0-9]+$/i,
   colorGlobal: /^#[A-F0-9]+$/gi,
   notColorGlobal: /[^A-F0-9]/gi,
+  escapeRegexes: /[-[\]{}()*+?.,\\^$|#\s]/g,
 };
 
 export default regexes;

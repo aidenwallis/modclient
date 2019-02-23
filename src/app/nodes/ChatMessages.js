@@ -8,9 +8,10 @@ import noticeTemplate from '../templates/chat/notice';
 import automodTemplate from '../templates/chat/automod';
 import usernoticeTemplate from '../templates/chat/usernotice';
 import EventHub from '../modules/EventHub';
+import escapeRegExp from '../util/escapeRegExp';
 
 class ChatMessages extends ElementNode {
-  constructor(node) {
+  constructor(node, user) {
     super(node);
     this.collectedMessages = [];
     this.currentMessages = [];
@@ -23,17 +24,50 @@ class ChatMessages extends ElementNode {
     EventHub.instance.on('lock.hover', (ignoreHover) => {
       this.ignoreHover = ignoreHover;
     });
+    this.user = user;
     this.node.onscroll = e => this.scroll(e);
+    this.mentionRxs = null;
     this.statusNode = null;
     setInterval(() => this.updateMessages(), 100);
   }
 
+  setUser(user) {
+    this.user = user;
+    if (this.mentionRxs !== null) {
+      this.generateRegexes();
+    }
+  }
+
+  generateRegexes() {
+    if (!this.user) {
+      return;
+    }
+    this.mentionRxs = [
+      new RegExp(`\\b${this.user.login}\\b`, 'i'),
+    ];
+    if (this.user.display_name.toLowerCase() !== this.user.login) {
+      this.mentionRxs.push(new RegExp(`\\b${escapeRegExp(this.user.display_name.replace)}\\b`, 'i'));
+    }
+  }
+
   receiveMessage(message, isMod = false) {
-    const parsedMessage = this.parseMessage(message, isMod);
+    let isMention = false;
+    if (message.command === 'PRIVMSG') {
+      if (!this.mentionsRx) {
+        this.generateRegexes();
+      }
+      for (let i = 0; i < this.mentionRxs.length; i++) {
+        if (this.mentionRxs[i].test(message.trailing)) {
+          isMention = true;
+          break;
+        }
+      }
+    }
+    const parsedMessage = this.parseMessage(message, isMod, isMention);
     if (!parsedMessage) {
       return;
     }
-    this.pushMessageToBuffer(parsedMessage, message);
+    this.pushMessageToBuffer(parsedMessage, message, isMention);
   }
 
   parseMessage(message, isMod = false) {
@@ -256,12 +290,15 @@ class ChatMessages extends ElementNode {
     this.pushMessageToBuffer(noticeTemplate(text), message);
   }
 
-  pushMessageToBuffer(node, message, type = 'message') {
+  pushMessageToBuffer(node, message, isMention) {
     const line = document.createElement('div');
     line.className = 'chat-line';
     line.innerHTML = node;
     if (message.tags && message.tags.id) {
       line.dataset.msgId = message.tags.id;
+    }
+    if (isMention) {
+      line.classList.add('chat-line-mention');
     }
     if (message.tags && message.tags['user-id']) {
       line.dataset.userId = message.tags['user-id'];

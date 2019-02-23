@@ -17,6 +17,7 @@ class AppNode extends ElementNode {
       messages: null,
     };
 
+    this.user = null;
     this.loading = false;
   }
 
@@ -31,6 +32,13 @@ class AppNode extends ElementNode {
     }
   }
 
+  setUser(user) {
+    this.user = user;
+    if (this.nodes.messages) {
+      this.nodes.messages.setUser(user);
+    }
+  }
+
   startChannel(channelName) {
     this.node.innerHTML = mainTemplate(channelName);
     this.registerChatNodes(channelName);
@@ -40,7 +48,7 @@ class AppNode extends ElementNode {
     this.nodes = {
       roomstate: new RoomstateNode(document.getElementById('chat-roomstate')),
       chatForm: new ChatFormNode(document.getElementById('chat-form'), channelName),
-      messages: new ChatMessagesNode(document.getElementById('chat-messages')),
+      messages: new ChatMessagesNode(document.getElementById('chat-messages'), this.user),
       footer: new ElementNode(document.getElementById('chat-footer')),
       settings: new SettingsButtonNode(document.getElementById('settings-button')),
     };

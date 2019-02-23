@@ -74,6 +74,18 @@ class App {
         return;
       }
       helixClient.setToken(token);
+      helixClient.fetchUser()
+        .then((user) => {
+          if (!user) {
+            localStorage.removeItem('oauthToken');
+            this.start();
+            return;
+          }
+          this.app.setUser(user);
+        })
+        .catch(() => {
+          window.location = '/';
+        });
       helixClient.fetchChannelByLogin(channelName)
         .then((channel) => {
           this.bootstrapChannel(channel.login, channel.id, payload, token);

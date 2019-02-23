@@ -28,6 +28,8 @@ class ChatMessages extends ElementNode {
     this.node.onscroll = e => this.scroll(e);
     this.mentionRxs = null;
     this.statusNode = null;
+    this.scrollbackLength = null;
+    window.onresize = () => this.calculateScrollback();
     setInterval(() => this.updateMessages(), 100);
   }
 
@@ -70,6 +72,11 @@ class ChatMessages extends ElementNode {
     this.pushMessageToBuffer(parsedMessage, message, isMention);
   }
 
+  calculateScrollback() {
+    const MIN_MSG_HEIGHT = 30;
+    this.scrollbackLength = Math.round(Math.ceil(this.node.offsetHeight / MIN_MSG_HEIGHT) * 1.5);
+  }
+
   parseMessage(message, isMod = false) {
     switch (message.command) {
       case 'PRIVMSG':
@@ -86,6 +93,9 @@ class ChatMessages extends ElementNode {
   updateMessages() {
     if (this.hoverPause || this.scrollPause) {
       return;
+    }
+    if (!this.scrollbackLength) {
+      this.calculateScrollback();
     }
     const clearchats = [];
     for (let i = 0; i < this.collectedMessages.length; i++) {
@@ -104,8 +114,8 @@ class ChatMessages extends ElementNode {
       if (i === this.collectedMessages.length - 1) {
         this.collectedMessages = [];
         const childLength = this.node.children.length;
-        if (childLength > 200) {
-          const toRemove = childLength - 200;
+        if (childLength > this.scrollbackLength) {
+          const toRemove = childLength - this.scrollbackLength;
           for (let j = 0; j < toRemove; j++) {
             this.node.removeChild(this.node.childNodes[0]);
             this.currentMessages.shift();

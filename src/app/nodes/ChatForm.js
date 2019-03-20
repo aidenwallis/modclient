@@ -61,10 +61,10 @@ class ChatForm extends ElementNode {
 
   inputKeydown(e) {
     // if is a tab key pressed
-    if (this.tabTries === -1) {
-      this.query = e.target.value;
-    }
     if (e.keyCode === 9) {
+      if (this.tabTries === -1) {
+        this.query = e.target.value;
+      }
       this.handleInputTab(e);
       return false;
     }

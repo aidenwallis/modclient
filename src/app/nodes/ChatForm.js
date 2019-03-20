@@ -85,7 +85,7 @@ class ChatForm extends ElementNode {
     }
 
     const before = text.substring(0, caretPos);
-    const after = text.substring(caretPos);
+    const after = text.substring(Math.max(0, caretPos - 1));
 
     const firstSlice = before.split(' ');
     const firstSection = firstSlice[firstSlice.length - 1]; // first part of word

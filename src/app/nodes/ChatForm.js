@@ -61,6 +61,9 @@ class ChatForm extends ElementNode {
 
   inputKeydown(e) {
     // if is a tab key pressed
+    if (this.tabTries === -1) {
+      this.query = e.target.value;
+    }
     if (e.keyCode === 9) {
       this.handleInputTab(e);
       return false;
@@ -85,7 +88,7 @@ class ChatForm extends ElementNode {
     }
 
     const before = text.substring(0, caretPos);
-    const after = text.substring(Math.max(0, caretPos - 1));
+    const after = text.substring(caretPos);
 
     const firstSlice = before.split(' ');
     const firstSection = firstSlice[firstSlice.length - 1]; // first part of word

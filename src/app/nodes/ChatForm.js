@@ -98,6 +98,7 @@ class ChatForm extends ElementNode {
     }
 
     const searchWord = `${firstSection}${secondSection}`;
+    console.log(searchWord, before, after, firstSlice, secondSection);
 
     if (this.startIndex === -1) {
       this.startIndex = caretPos - (firstSection.length);

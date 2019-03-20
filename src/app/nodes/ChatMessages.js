@@ -28,8 +28,8 @@ class ChatMessages extends ElementNode {
     this.node.onscroll = e => this.scroll(e);
     this.mentionRxs = null;
     this.statusNode = null;
-    this.scrollbackLength = null;
-    window.onresize = () => this.calculateScrollback();
+    this.scrollbackLength = 500;
+    // window.onresize = () => this.calculateScrollback();
     setInterval(() => this.updateMessages(), 100);
   }
 
@@ -72,10 +72,10 @@ class ChatMessages extends ElementNode {
     this.pushMessageToBuffer(parsedMessage, message, isMention);
   }
 
-  calculateScrollback() {
-    const MIN_MSG_HEIGHT = 30;
-    this.scrollbackLength = Math.round(Math.ceil(this.node.offsetHeight / MIN_MSG_HEIGHT) * 3.5);
-  }
+  // calculateScrollback() {
+  //   const MIN_MSG_HEIGHT = 30;
+  //   this.scrollbackLength = Math.round(Math.ceil(this.node.offsetHeight / MIN_MSG_HEIGHT) * 3.5);
+  // }
 
   parseMessage(message, isMod = false) {
     switch (message.command) {
@@ -94,9 +94,9 @@ class ChatMessages extends ElementNode {
     if (this.hoverPause || this.scrollPause) {
       return;
     }
-    if (!this.scrollbackLength) {
-      this.calculateScrollback();
-    }
+    // if (!this.scrollbackLength) {
+    //   this.calculateScrollback();
+    // }
     const clearchats = [];
     for (let i = 0; i < this.collectedMessages.length; i++) {
       let message = this.collectedMessages[i];
@@ -224,7 +224,7 @@ class ChatMessages extends ElementNode {
         text += `${message.tags['ban-duration']} second${message.tags['ban-duration'] != 1 ? 's' : ''}`;
       }
       text + '.';
-      if (message.tags['ban-reason'] !== '') {
+      if (message.tags['ban-reason'] && message.tags['ban-reason'] !== '') {
         text += ' Reason: ';
         text += message.tags['ban-reason'];
       }

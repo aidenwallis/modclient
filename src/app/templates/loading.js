@@ -1,5 +1,5 @@
-const loadingTemplate = `
-  <div class="overlay overlay-active">
+const loadingTemplate = (className) => `
+  <div class="overlay overlay-active${className ? ' ' + className : ''}">
     <div class="overlay-center">
       <div class="loading">
         <div class="spinner">

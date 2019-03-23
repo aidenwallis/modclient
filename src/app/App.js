@@ -88,6 +88,7 @@ class App {
         });
       helixClient.fetchChannelByLogin(channelName)
         .then((channel) => {
+          this.app.setChannel(channel.login);
           this.bootstrapChannel(channel.login, channel.id, payload, token);
         })
         .catch((err) => {

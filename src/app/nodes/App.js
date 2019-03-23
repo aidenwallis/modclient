@@ -4,6 +4,7 @@ import loadingTemplate from '../templates/loading';
 
 import ChatFormNode from './ChatForm';
 import ChatMessagesNode from './ChatMessages';
+import ChattersButtonNode from './ChattersButton';
 import ElementNode from '../modules/ElementNode';
 import RoomstateNode from './Roomstate';
 import SettingsButtonNode from './SettingsButton';
@@ -18,6 +19,7 @@ class AppNode extends ElementNode {
     };
 
     this.user = null;
+    this.channel = null;
     this.loading = false;
   }
 
@@ -26,9 +28,13 @@ class AppNode extends ElementNode {
     this.updateLoading();
   }
 
+  setChannel(channel) {
+    this.channel = channel;
+  }
+
   updateLoading() {
     if (this.loading) {
-      this.node.innerHTML = loadingTemplate;
+      this.node.innerHTML = loadingTemplate();
     }
   }
 
@@ -51,6 +57,7 @@ class AppNode extends ElementNode {
       messages: new ChatMessagesNode(document.getElementById('chat-messages'), this.user),
       footer: new ElementNode(document.getElementById('chat-footer')),
       settings: new SettingsButtonNode(document.getElementById('settings-button')),
+      chatters: new ChattersButtonNode(document.getElementById('chatters-button'), this.channel),
     };
     elements.footer = this.nodes.footer;
   }

@@ -17,6 +17,12 @@ class CustomapiBackendClient {
                 ...chatters.viewers,
             ]);
     }
+
+    fetchChattersList(channelName) {
+        return this.client.get(`v1/chatters/${channelName}`)
+            .then((res) => res.data.data)
+            .then((data) => data.chatters);
+    }
 }
 
 export default CustomapiBackendClient;

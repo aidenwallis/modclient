@@ -6,9 +6,7 @@ const chatFooterTemplate = (channel) => `
       </div>
       <div class="chat-bottom">
         <button id="settings-button" class="chat-bottom-button" title="Modclient Settings"><i class="fa fa-cog fa-fw"></i></button>
-        <a target="_blank" class="chat-bottom-button" title="Chatter list" href="https://twitchstuff.3v.fi/chatters/?ch=${channel}" rel="noopener noreferrer">
-          <i class="fa fa-list fa-fw"></i>
-        </a>
+        <button id="chatters-button" class="chat-bottom-button" title="Chatters"><i class="fa fa-list fa-fw"></i></button>
       </div>
     </form>
   </div>

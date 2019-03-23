@@ -4,12 +4,14 @@
   position: fixed;
   z-index: 9999;
   width: 100vw;
-  height: 100vh;
   left: 0;
   top: 0;
   background: $dark;
   display: none;
   align-items: center;
+  &:not(.overlay-chatters) {
+    height: 100vh;
+  }
 }
 
 .overlay-active {
@@ -20,4 +22,9 @@
   margin: auto;
   display: block;
   width: 100%;
+}
+
+.overlay-chatters {
+  top: 60px;
+  bottom: 0;
 }

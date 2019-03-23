@@ -83,7 +83,7 @@
   }
 }
 
-.setting-mod-line-icon {
+.setting-item {
   display: flex;
   flex-direction: row;
   margin-top: 12px;
@@ -114,6 +114,28 @@
   &-column {
     padding-left: 15px;
   }
+  &-input {
+    min-width: 30px;
+  }
+  &-enabled {
+    color: #fff;
+    font-weight: 500;
+    display: block;
+    padding: 8px 0;
+    font-size: 14px;
+    strong {
+      padding-bottom: 3px;
+      display: block;
+    }
+    text-align: center;
+    &-control {
+      display: block;
+      margin: auto;
+    }
+  }
+}
+
+.setting-mod-line-icon {
   select.setting-mod-line-icon-type {
     max-width: 139px;
   }

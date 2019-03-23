@@ -8,6 +8,7 @@ import noticeTemplate from '../templates/chat/notice';
 import automodTemplate from '../templates/chat/automod';
 import usernoticeTemplate from '../templates/chat/usernotice';
 import EventHub from '../modules/EventHub';
+import MentionsModule from '../modules/Mentions';
 import escapeRegExp from '../util/escapeRegExp';
 
 class ChatMessages extends ElementNode {
@@ -63,6 +64,9 @@ class ChatMessages extends ElementNode {
           isMention = true;
           break;
         }
+      }
+      if (!isMention) {
+        isMention = MentionsModule.checkMention(message.trailing);
       }
     }
     const parsedMessage = this.parseMessage(message, isMod, isMention);

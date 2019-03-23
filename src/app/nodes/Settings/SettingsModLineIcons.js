@@ -65,27 +65,27 @@ class SettingsModLineIconsNode extends ElementNode {
 
   spawnNode(item, index) {
     const node = document.createElement('div');
-    node.className = 'setting-mod-line-icon';
+    node.className = 'setting-item';
     node.dataset.index = index;
-    node.id = `setting-mod-line-icon-${index}`;
+    node.id = `setting-item-${index}`;
     node.innerHTML = settingModLineIconTemplate(item);
     this.mountNodeEvents(node, index, item);
     return node;
   }
 
   mountNodeEvents(node, index, item) {
-    node.querySelector('.setting-mod-line-icon-type').onchange = e => this.changeModIconType(e, index);
-    node.querySelector('.setting-mod-line-icon-input').onblur = e => this.changeModIconQuery(e, index);
-    node.querySelector('.setting-mod-line-icon-labeltype').onchange = e => this.changeModIconLabeltype(e, index, node);
+    node.querySelector('.setting-item-type').onchange = e => this.changeModIconType(e, index);
+    node.querySelector('.setting-item-input').onblur = e => this.changeModIconQuery(e, index);
+    node.querySelector('.setting-item-labeltype').onchange = e => this.changeModIconLabeltype(e, index, node);
     if (item.labelType.toString() === '1') {
-      node.querySelector('.setting-mod-line-icon-label-input').onblur = e => this.changeModIconLabel(e, index, item);
+      node.querySelector('.setting-item-label-input').onblur = e => this.changeModIconLabel(e, index, item);
     }
     if (item.labelType.toString() === '0') {
-      node.querySelector('button.setting-mod-line-icon-icon-preview').onclick = e => this.openModIconSelector(e, index, item);
+      node.querySelector('button.setting-item-icon-preview').onclick = e => this.openModIconSelector(e, index, item);
     }
-    node.querySelector('.setting-mod-line-icon-up').onclick = e => this.moveModIcon(e, index, -1);
-    node.querySelector('.setting-mod-line-icon-down').onclick = e => this.moveModIcon(e, index, 1);
-    node.querySelector('.setting-mod-line-icon-delete').onclick = e => this.deleteModIcon(index);
+    node.querySelector('.setting-item-up').onclick = e => this.moveModIcon(e, index, -1);
+    node.querySelector('.setting-item-down').onclick = e => this.moveModIcon(e, index, 1);
+    node.querySelector('.setting-item-delete').onclick = e => this.deleteModIcon(index);
   }
 
   openModIconSelector(e, index, item) {
@@ -97,7 +97,7 @@ class SettingsModLineIconsNode extends ElementNode {
     const selectorNode = document.createElement('div');
     selectorNode.style.left = `${parentNode.offsetLeft}px`;
     selectorNode.style.top = `${parentNode.offsetTop}px`;
-    selectorNode.className = 'setting-mod-line-icon-selector-container icon-selector';
+    selectorNode.className = 'setting-item-selector-container icon-selector';
     selectorNode.onclick = e => e.stopPropagation();
 
     const iconNode = document.createElement('i');

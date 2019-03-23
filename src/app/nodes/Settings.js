@@ -5,6 +5,7 @@ import SettingsCloseNode from './SettingsClose';
 import SettingsAppearanceNode from './Settings/SettingsAppearance';
 import SettingsHomeNode from './Settings/SettingsHome';
 import SettingsModLineIconsNode from './Settings/SettingsModLineIcons';
+import SettingsMentionsNode from './Settings/SettingsMentions';
 
 const defaultNodes = {
   close: null,
@@ -21,6 +22,7 @@ class SettingsNode extends ElementNode {
       home: null,
       appearance: null,
       modLineIcons: null,
+      mentions: null,
     };
   }
 
@@ -33,6 +35,7 @@ class SettingsNode extends ElementNode {
       home: new SettingsHomeNode(contentNode),
       appearance: new SettingsAppearanceNode(contentNode),
       modLineIcons: new SettingsModLineIconsNode(contentNode),
+      mentions: new SettingsMentionsNode(contentNode),
     };
     this.changeSection('home');
   }

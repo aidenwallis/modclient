@@ -14,6 +14,11 @@ class SettingsMentions extends ElementNode {
   constructor(node) {
     super(node);
     this.settings = SettingsModule.fetchSettings();
+    // In the case the user doesn't yet have any mentions made.
+    if (!this.settings.mentions) {
+      this.settings.mentions = [];
+      SettingsModule.updateSettings(this.settings);
+    }
     this.nodes = defaultNodes;
   }
 

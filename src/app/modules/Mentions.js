@@ -12,7 +12,7 @@ class MentionsModule {
   }
 
   compileMentions() {
-    return this.mentions.filter(m => m.enabled).map((mention) => {
+    return this.mentions.filter(m => m.enabled && m.text !== '').map((mention) => {
       console.log(mention);
       const textLower = mention.text.toLowerCase();
       const type = mention.type.toString();
